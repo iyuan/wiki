@@ -1,0 +1,4458 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="Stylesheet" type="text/css" href="style.css">
+<title>页面的标题(title)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+
+<p>
+<strong>vimwiki.txt</strong>   Vim 里的个人维基(Wiki)
+</p>
+<blockquote>
+__   __  ___   __   __  _     _  ___   ___   _  ___             ~
+|  | |  ||   | |  |_|  || | _ | ||   | |   | | ||   |            ~
+|  |<em>|  ||   | |       || || || ||   | |   |</em>| ||   |            ~
+|       ||   | |       ||       ||   | |      _||   |            ~
+|       ||   | |       ||       ||   | |     |_ |   |            ~
+|     | |   | | ||_|| ||   _   ||   | |    _  ||   |            ~
+|__<em>|  |</em>_<em>| |</em>|   |<em>||</em><em>| |</em><em>||</em>_<em>| |</em>_<em>| |</em>||___|            ~
+</blockquote>
+<blockquote>
+版本: 1.1.1
+译者: 闲耘™(hotoo.cn[AT]gmail.com)
+lizaib(biazil.x[AT]gmail.com)
+</blockquote>
+<blockquote>
+文档更新记录：v0.9.9 -&gt; v1.0 -&gt; v1.1.1
+</blockquote>
+
+<p>
+==============================================================================
+目录                                                        <strong>vimwiki-contents</strong>
+</p>
+<blockquote>
+1. 介绍                          |vimwiki|
+2. 安装条件                      |vimwiki-prerequisites|
+3. 映射                          |vimwiki-mappings|
+3.1. 全局映射                |vimwiki-global-mappings|
+3.2. 局部映射                |vimwiki-local-mappings|
+3.3. 文本对象                |vimwiki-text-objects|
+4. 命令                          |vimwiki-commands|
+4.1. 全局命令                |vimwiki-global-commands|
+4.2. 局部命令                |vimwiki-local-commands|
+5. Wiki 语法                     |vimwiki-syntax|
+5.1. 字体                    |vimwiki-syntax-typefaces|
+5.2. 词条                    |vimwiki-syntax-links|
+5.3. 标题                    |vimwiki-syntax-headers|
+5.4. 段落                    |vimwiki-syntax-paragraphs|
+5.5. 列表                    |vimwiki-syntax-lists|
+5.6. 表格                    |vimwiki-syntax-tables|
+5.7. 预格式化文本            |vimwiki-syntax-preformatted|
+5.8. 块级引用                |vimwiki-syntax-blockquotes|
+5.9. 注释                    |vimwiki-syntax-comments|
+6. 折叠/大纲                     |vimwiki-folding|
+7. 占位符                        |vimwiki-placeholders|
+8. 待办事项(TODO)列表            |vimwiki-todo-lists|
+9. 表格                          |vimwiki-tables|
+10. 日记                         |vimwiki-diary|
+11. 选项                         |vimwiki-options|
+12. 帮助                         |vimwiki-help|
+13. 开发者                       |vimwiki-developers|
+14. 版本更新记录                 |vimwiki-changelog|
+15. 许可证                       |vimwiki-license|
+</blockquote>
+
+
+<p>
+==============================================================================
+1. 介绍                                                              <strong>vimwiki</strong>
+</p>
+
+<p>
+Vimwiki 是一个 Vim 中的个人 wiki -- 一个有它自己的高亮语法和链接的文本文件。
+</p>
+
+<p>
+使用 vimwiki 你可以：
+</p>
+<ul>
+<li>
+组织笔记和想法；
+
+<li>
+管理待办事项列表；
+
+<li>
+写文档。
+
+</ul>
+
+<p>
+通过按 &lt;Leader&gt;ww （通常是 \ww）键来快速启动，进入 wiki 索引页。默认路径在： &gt;
+</p>
+<blockquote>
+~/vimwiki/index.wiki
+</blockquote>
+<p>
+&lt;
+参考下面示例：
+</p>
+
+<h1 id="toc_1">我的知识库</h1>
+<ul>
+<li>
+我的紧急任务(MyUrgentTasks) -- 昨天应该完成的事！！！
+
+<li>
+<a href="古腾堡计划.html">古腾堡计划</a>(ProjectGutenberg) -- 强大的好书。
+
+<li>
+便条簿(ScratchPad) -- 各种临时的东西。
+
+</ul>
+
+
+<p>
+注意：ProjectGutenberg, MyUrgentTasks 和 ScratchPad 将高亮成“错误”样式。
+这些驼峰形式的链接尚不存在。（驼峰形式就是两个以大写字母开头的单词组合成一个词）
+</p>
+
+<p>
+将光标放置在 ProjectGutenberg 上并按回车(&lt;Enter&gt;)键，你将进入
+ProjectGutenberg ，编辑并保存它，然后按退格键(&lt;Backspace&gt;)可以回到上一个 wiki
+文件。你现在就会看到不同了 -- ProjectGutenberg 高亮为一个链接。
+</p>
+
+
+<p>
+==============================================================================
+2. 安装条件                                            <strong>vimwiki-prerequisites</strong>
+</p>
+
+<p>
+确保你的 vimrc 文件中有如下的设置： &gt;
+</p>
+<blockquote>
+set nocompatible
+filetype plugin on
+syntax on
+</blockquote>
+
+<p>
+离开这些设置 Vimwiki 将不能正常工作。
+</p>
+
+
+<p>
+==============================================================================
+3. 映射                                                     <strong>vimwiki-mappings</strong>
+</p>
+
+<p>
+下面是 vimwiki 的全局和局部映射。
+</p>
+
+<hr />
+<p>
+3.1. 全局映射                                        <strong>vimwiki-global-mappings</strong>
+</p>
+
+<p>
+[count]&lt;Leader&gt;ww 或者 &lt;Plug&gt;VimwikiIndex
+</p>
+<blockquote>
+打开第 [count] 个 wiki 索引文件。
+</blockquote>
+<blockquote>
+&lt;Leader&gt;ww 从 |g:vimwiki_list| 打开第一个 wiki。
+1&lt;Leader&gt;ww 同上，从 |g:vimwiki_list| 打开第一个 wiki。
+2&lt;Leader&gt;ww 从 |g:vimwiki_list| 打开第二个 wiki。
+3&lt;Leader&gt;ww 从 |g:vimwiki_list| 打开第三个 wiki。
+依此类推：
+重映射： &gt;
+:map &lt;Leader&gt;w &lt;Plug&gt;VimwikiIndex
+</blockquote>
+<p>
+&lt;
+更多可以参考|:VimwikiIndex
+</p>
+
+
+<p>
+[count]&lt;Leader&gt;wt 或者 &lt;Plug&gt;VimwikiTabIndex
+</p>
+<blockquote>
+在新标签页中打开 第 [count] 个 wiki 索引文件。
+</blockquote>
+<blockquote>
+&lt;Leader&gt;wt 在标签页中打开 |g:vimwiki_list| 中的第一个 wiki。
+1&lt;Leader&gt;wt 同上，在标签页中打开 |g:vimwiki_list| 中的第一个 wiki。
+2&lt;Leader&gt;wt 在标签页中打开 |g:vimwiki_list| 中的第二个 wiki。
+3&lt;Leader&gt;wt 在标签页中打开 |g:vimwiki_list| 中的第三个 wiki。
+依此类推：
+重映射： &gt;
+:map &lt;Leader&gt;t &lt;Plug&gt;VimwikiTabIndex
+</blockquote>
+<p>
+&lt;
+参考 |:VimwikiTabIndex|
+</p>
+
+
+<p>
+&lt;Leader&gt;ws 或者 &lt;Plug&gt;VimwikiUISelect
+</p>
+<blockquote>
+List and select available wikies.
+列出可选择的 wiki 列表。
+重映射： &gt;
+:map &lt;Leader&gt;wq &lt;Plug&gt;VimwikiUISelect
+</blockquote>
+<p>
+&lt;
+参考|:VimwikiUISelect|
+</p>
+
+
+<p>
+[count]&lt;Leader&gt;w&lt;Leader&gt;w 或者 &lt;Plug&gt;VimwikiMakeDiaryNote
+</p>
+<blockquote>
+打开今天第 [count] 个 wiki 日记文件。
+</blockquote>
+<blockquote>
+&lt;Leader&gt;w&lt;Leader&gt;w 从 |g:vimwiki_list| 中打开今天第一个 wiki 日记文件。
+1&lt;Leader&gt;w&lt;Leader&gt;w 同上，从 |g:vimwiki_list| 中打开今天第一个 wiki 日记文件。
+2&lt;Leader&gt;w&lt;Leader&gt;w 从 |g:vimwiki_list| 中打开今天第二个 wiki 日记文件。
+3&lt;Leader&gt;w&lt;Leader&gt;w 从 |g:vimwiki_list| 中打开今天第三个 wiki 日记文件。
+依此类推：
+重映射： &gt;
+:map &lt;Leader&gt;d &lt;Plug&gt;VimwikiMakeDiaryNote
+</blockquote>
+<p>
+&lt;
+参考|:VimwikiMakeDiaryNote|
+</p>
+
+
+<p>
+[count]&lt;Leader&gt;w&lt;Leader&gt;t 或者 &lt;Plug&gt;VimwikiTabMakeDiaryNote
+</p>
+<blockquote>
+在新标签页中打开今天第 [count] 个 wiki 日记文件。
+</blockquote>
+<blockquote>
+&lt;Leader&gt;w&lt;Leader&gt;t 在标签页中打开|g:vimwiki_list|中的第一个 wiki 日记文件。
+1&lt;Leader&gt;w&lt;Leader&gt;t 同上。
+2&lt;Leader&gt;w&lt;Leader&gt;t 在标签页中打开|g:vimwiki_list|中的第二个 wiki 日记文件。
+3&lt;Leader&gt;w&lt;Leader&gt;t 在标签页中打开|g:vimwiki_list|中的第三个 wiki 日记文件。
+依此类推。
+重映射： &gt;
+:map &lt;Leader&gt;dt &lt;Plug&gt;VimwikiTabMakeDiaryNote
+</blockquote>
+<p>
+&lt;
+参考|:VimwikiTabMakeDiaryNote|
+</p>
+
+
+<hr />
+<p>
+3.2. 局部映射（本地映射）
+</p>
+
+<p>
+NORMAL MODE                                           <strong>vimwiki-local-mappings</strong>
+(普通模式)
+</p>
+<blockquote>
+<strong>vimwiki_&lt;CR&gt;</strong>
+</blockquote>
+<p>
+&lt;CR&gt;                    打开/创建 Wiki 词条。
+</p>
+<blockquote>
+映射到 |:VimwikiFollowLink| 。
+重映射： &gt;
+:map &lt;Leader&gt;wf &lt;Plug&gt;VimwikiFollowLink
+</blockquote>
+<p>
+&lt;
+</p>
+<blockquote>
+<strong>vimwiki_&lt;S-CR&gt;</strong>
+</blockquote>
+<p>
+&lt;S-CR&gt;                  横向分栏窗口中打开/创建 Wiki 词条。
+</p>
+<blockquote>
+映射到 |:VimwikiSplitLink| 。
+重映射： &gt;
+:map &lt;Leader&gt;we &lt;Plug&gt;VimwikiSplitLink
+</blockquote>
+<p>
+&lt;
+</p>
+<blockquote>
+<strong>vimwiki_&lt;C-CR&gt;</strong>
+</blockquote>
+<p>
+&lt;C-CR&gt;                  纵向分栏窗口中打开/创建 Wiki 词条。
+</p>
+<blockquote>
+映射到 |:VimwikiVSplitLink| 。
+重映射： &gt;
+:map &lt;Leader&gt;wq &lt;Plug&gt;VimwikiVSplitLink
+</blockquote>
+<p>
+&lt;
+</p>
+<blockquote>
+<strong>vimwiki_&lt;Backspace&gt;</strong>
+</blockquote>
+<p>
+&lt;Backspace&gt;             回到上一个 Wiki 词条。
+</p>
+<blockquote>
+映射到|:VimwikiGoBackLink|。
+重映射： &gt;
+:map &lt;Leader&gt;wb &lt;Plug&gt;VimwikiGoBackLink
+</blockquote>
+<p>
+&lt;
+</p>
+<blockquote>
+<strong>vimwiki_&lt;Tab&gt;</strong>
+</blockquote>
+<p>
+&lt;Tab&gt;                   寻找并将光标定位到下一个 Wiki 词条。
+</p>
+<blockquote>
+映射到 |:VimwikiNextLink| 。
+重映射： &gt;
+:map &lt;Leader&gt;wn &lt;Plug&gt;VimwikiNextLink
+</blockquote>
+<p>
+&lt;
+</p>
+<blockquote>
+<strong>vimwiki_&lt;S-Tab&gt;</strong>
+</blockquote>
+<p>
+&lt;S-Tab&gt;                 寻找并将光标定位到上一个 Wiki 词条。
+</p>
+<blockquote>
+映射到 |:VimwikiPrevLink| 。
+映射到： &gt;
+:map &lt;Leader&gt;wp &lt;Plug&gt;VimwikiPrevLink
+</blockquote>
+<p>
+&lt;
+</p>
+<blockquote>
+<strong>vimwiki_&lt;Leader&gt;wd</strong>
+</blockquote>
+<p>
+&lt;Leader&gt;wd              删除光标所在的 Wiki 词条。
+</p>
+<blockquote>
+映射到 |:VimwikiDeleteLink| 。
+重映射： &gt;
+:map &lt;Leader&gt;dd &lt;Plug&gt;VimwikiDeleteLink
+</blockquote>
+<p>
+&lt;
+</p>
+<blockquote>
+<strong>vimwiki_&lt;Leader&gt;wr</strong>
+</blockquote>
+<p>
+&lt;Leader&gt;wr              重命名光标所在的 Wiki 词条。
+</p>
+<blockquote>
+映射到|:VimwikiRenameLink|。
+重映射： &gt;
+:map &lt;Leader&gt;rr &lt;Plug&gt;VimwikiRenameLink
+</blockquote>
+<p>
+&lt;
+</p>
+<blockquote>
+<strong>vimwiki_&lt;C-Space&gt;</strong>
+</blockquote>
+<p>
+&lt;C-Space&gt;               切换列表项的开关（选中/反选）
+</p>
+<blockquote>
+（译注：&lt;C-Space&gt; 是中文输入法切换热键，可以参考下面的
+重映射方法，不过 &lt;leader&gt;tt 也是插件 tasklist.vim 的
+热键。）
+映射到 |:VimwikiToggleListItem|。
+重映射： &gt;
+:map &lt;leader&gt;tt &lt;Plug&gt;VimwikiToggleListItem
+</blockquote>
+<p>
+&lt;                       参考 |vimwiki-todo-lists|。
+</p>
+<blockquote>
+<strong>vimwiki_=</strong>
+</blockquote>
+<p>
+=                       增加标题级别，如果需要则创建标题。
+</p>
+<blockquote>
+vimwiki 里是没有缩进命令 '==' 的，所以请确定是否需要
+'=' 命令。
+</blockquote>
+<blockquote>
+<strong>vimwiki_-</strong>
+</blockquote>
+<ul>
+<li>
+                      降低标题级别。
+
+</ul>
+<blockquote>
+<strong>vimwiki_gqq</strong>  <strong>vimwiki_gww</strong>
+</blockquote>
+<p>
+gqq                     格式化表格。
+ 或                     如果你在没有切换插入模式和普通模式的情况下改变了表格内容，
+gww                     这个表格可以重新格式化它。
+</p>
+<blockquote>
+<strong>vimwiki_&lt;A-Left&gt;</strong>
+</blockquote>
+<p>
+&lt;A-Left&gt;                向左移动表格的当前列。
+</p>
+<blockquote>
+参考 |:VimwikiTableMoveColumnLeft|
+</blockquote>
+<blockquote>
+<strong>vimwiki_&lt;A-Right&gt;</strong>
+</blockquote>
+<p>
+&lt;A-Right&gt;               向右移动表格当前列。
+</p>
+<blockquote>
+参考 |:VimwikiTableMoveColumnRight|
+</blockquote>
+<blockquote>
+<strong>vimwiki_&lt;C-Up&gt;</strong>
+</blockquote>
+<p>
+&lt;C-Up&gt;                  如果可以，打开上一个日记词条。
+</p>
+<blockquote>
+参考 |:VimwikiDiaryPrevDay|
+</blockquote>
+<blockquote>
+<strong>vimwiki_&lt;C-Down&gt;</strong>
+</blockquote>
+<p>
+&lt;C-Down&gt;                如果可以，打开下一个日记词条。
+</p>
+<blockquote>
+参考 |:VimwikiDiaryNextDay|
+</blockquote>
+
+
+<p>
+仅在 |g:vimwiki_use_mouse| 设置为 1 的情况下有效。
+&lt;2-LeftMouse&gt;           双击鼠标打开/创建 Wiki 词条。
+</p>
+
+<p>
+&lt;S-2-LeftMouse&gt;         横向分栏窗口中打开/创建 Wiki 词条。
+</p>
+
+<p>
+&lt;C-2-LeftMouse&gt;         纵向分栏窗口中打开/创建 Wiki 词条。
+</p>
+
+<p>
+&lt;RightMouse&gt;&lt;LeftMouse&gt; 返回到上一个 Wiki 词条。
+</p>
+
+<p>
+Note: &lt;2-LeftMouse&gt; 即仅双击左键。
+</p>
+
+
+
+<p>
+INSERT MODE                                           <strong>vimwiki-table-mappings</strong>
+(插入模式)
+</p>
+<blockquote>
+<strong>vimwiki_i_&lt;CR&gt;</strong>
+</blockquote>
+<p>
+&lt;CR&gt;                    转到表格单元格的下一行，如果在最后一行则创建一行。
+</p>
+<blockquote>
+<strong>vimwiki_i_&lt;Tab&gt;</strong>
+</blockquote>
+<p>
+&lt;Tab&gt;                   转到下一个表格单元格，如果在最后一个单元格，则创建一行。
+</p>
+<blockquote>
+<strong>vimwiki_i_&lt;S-CR&gt;</strong>
+</blockquote>
+<p>
+&lt;S-CR&gt;                  插入 <br /> 并回车换行。
+</p>
+
+
+<hr />
+<p>
+3.3. 文本对象                                          <strong>vimwiki-text-objects</strong>
+</p>
+
+<p>
+ah                      一个包含前置空行的标题。
+ih                      一个不包含前置空行的标题内部。
+</p>
+
+<p>
+你可以使用 'vah' 来选择包含其内容的标题，或者使用 'dah' 来删除、或者可以用
+'yah' 来复制、或者也可以使用 'cah' 来修改这个标题。
+</p>
+
+<p>
+a\                      表格中的一整个单元格（包括单元格边框）。
+i\                      表格单元格内部。
+ac                      表格的一列（包括单元格边框）。
+ic                      表格单元格内部。
+</p>
+
+<p>
+==============================================================================
+4. 命令                                                     <strong>vimwiki-commands</strong>
+</p>
+
+<hr />
+<p>
+4.1. 全局命令                                        <strong>vimwiki-global-commands</strong>
+</p>
+
+<p>
+<strong>:VimwikiIndex</strong>
+</p>
+<blockquote>
+打开当前 wiki 的索引文件。
+</blockquote>
+
+<p>
+<strong>:VimwikiTabIndex</strong>
+</p>
+<blockquote>
+在新标签页中打开当前 wiki 的索引文件。
+</blockquote>
+
+<p>
+<strong>:VimwikiUISelect</strong>
+</p>
+<blockquote>
+打开所选择的 wiki 索引文件。
+</blockquote>
+
+<p>
+<strong>:VimwikiMakeDiaryNote</strong>
+</p>
+<blockquote>
+打开当前 wiki 中今天的 wiki 日记文件。
+</blockquote>
+
+<p>
+<strong>:VimwikiTabMakeDiaryNote</strong>
+</p>
+<blockquote>
+在新标签页中打开当前 wiki 中今天的 wiki 日志文件。
+</blockquote>
+
+<hr />
+<p>
+4.2. 局部命令                                         <strong>vimwiki-local-commands</strong>
+</p>
+
+<p>
+<strong>:VimwikiFollowLink</strong>
+</p>
+<blockquote>
+打开/创建 Wiki 词条。
+</blockquote>
+
+
+<p>
+<strong>:VimwikiGoBackLink</strong>
+</p>
+<blockquote>
+返回到跳转过来的上一个 Wiki 词条。
+</blockquote>
+
+
+<p>
+<strong>:VimwikiSplitLink</strong>
+</p>
+<blockquote>
+在纵向分栏窗口中打开/创建 Wiki 词条。
+</blockquote>
+
+
+<p>
+<strong>:VimwikiVSplitLink</strong>
+</p>
+<blockquote>
+在横向分栏窗口中打开/创建 Wiki 词条。
+</blockquote>
+
+
+<p>
+<strong>:VimwikiNextLink</strong>
+</p>
+<blockquote>
+寻找并将光标定位到下一个 Wiki 词条。
+</blockquote>
+
+
+<p>
+<strong>:VimwikiPrevLink</strong>
+</p>
+<blockquote>
+寻找并将光标定位到上一个 Wiki 词条。
+</blockquote>
+
+
+<p>
+<strong>:VimwikiGoto</strong>
+</p>
+<blockquote>
+跳转到指定词条。例如： &gt;
+:VimwikiGoto HelloWorld
+</blockquote>
+<p>
+&lt;   打开或创建 HelloWorld wiki 页面。
+</p>
+
+
+<p>
+<strong>:VimwikiDeleteLink</strong>
+</p>
+<blockquote>
+删除当前所在的 Wiki 词条。
+</blockquote>
+
+
+<p>
+<strong>:VimwikiRenameLink</strong>
+</p>
+<blockquote>
+重命名当前所在的 Wiki 词条。
+</blockquote>
+
+
+<p>
+<strong>:Vimwiki2HTML</strong>
+</p>
+<blockquote>
+将当前所在的 wiki 页面转换成 HTML 页面。
+</blockquote>
+
+
+<p>
+<strong>:VimwikiAll2HTML</strong>
+</p>
+<blockquote>
+将所有的 wiki 页面转换成 HTML。
+</blockquote>
+
+
+<p>
+<strong>:VimwikiToggleListItem</strong>
+</p>
+<blockquote>
+切换列表项的开关（选中/反选）
+参考 |vimwiki-todo-lists|.
+</blockquote>
+
+
+<p>
+<strong>:VimwikiSearch</strong> /pattern/
+<strong>:VWS</strong> /pattern/
+</p>
+<blockquote>
+在当前 wiki 中搜索 /pattern/。
+使用 |:cnext| 命令显示下一个匹配项。
+使用 |:cprevious| 命令显示上一个匹配项。
+</blockquote>
+
+
+<p>
+<strong>:VimwikiTable</strong>
+</p>
+<blockquote>
+创建一个 5 列 2 行的表格。
+</blockquote>
+<blockquote>
+:VimwikiTable cols rows
+创建一个指定列数和行数的表格。
+</blockquote>
+<blockquote>
+:VimwikiTable cols
+创建一个指定列数和 2 行的表格。
+</blockquote>
+
+
+<p>
+<strong>:VimwikiTableMoveColumnLeft</strong> , <strong>:VimwikiTableMoveColumnRight</strong>
+</p>
+<blockquote>
+向左或向右移动当前列：
+例如： &gt;
+</blockquote>
+
+<table class='center'>
+<tr>
+<td>
+head1
+</td>
+<td>
+head2
+</td>
+<td>
+head3
+</td>
+<td>
+head4
+</td>
+<td>
+head5
+</td>
+</tr>
+<tr>
+<td>
+--------+--------+--------+--------+--------
+</td>
+</tr>
+<tr>
+<td>
+value1
+</td>
+<td>
+value2
+</td>
+<td>
+value3
+</td>
+<td>
+value4
+</td>
+<td>
+value5
+</td>
+</tr>
+</table>
+<blockquote>
+光标在 'head1' 之上。
+:VimwikiTableMoveColumnRight
+</blockquote>
+
+<table class='center'>
+<tr>
+<td>
+head2
+</td>
+<td>
+head1
+</td>
+<td>
+head3
+</td>
+<td>
+head4
+</td>
+<td>
+head5
+</td>
+</tr>
+<tr>
+<td>
+--------+--------+--------+--------+--------
+</td>
+</tr>
+<tr>
+<td>
+value2
+</td>
+<td>
+value1
+</td>
+<td>
+value3
+</td>
+<td>
+value4
+</td>
+<td>
+value5
+</td>
+</tr>
+</table>
+<blockquote>
+光标在 'head3' 之上。
+:VimwikiTableMoveColumnLeft
+</blockquote>
+
+<table class='center'>
+<tr>
+<td>
+head2
+</td>
+<td>
+head3
+</td>
+<td>
+head1
+</td>
+<td>
+head4
+</td>
+<td>
+head5
+</td>
+</tr>
+<tr>
+<td>
+--------+--------+--------+--------+--------
+</td>
+</tr>
+<tr>
+<td>
+value2
+</td>
+<td>
+value3
+</td>
+<td>
+value1
+</td>
+<td>
+value4
+</td>
+<td>
+value5
+</td>
+</tr>
+</table>
+<p>
+&lt;
+</p>
+<blockquote>
+命令已分别映射到 &lt;A-Left&gt; 和 &lt;A-Right&gt; 快捷键上。
+</blockquote>
+
+
+<p>
+<strong>:VimwikiGenerateLinks</strong>
+</p>
+<blockquote>
+插入所有可用的词条到当前缓冲区。
+</blockquote>
+
+
+<p>
+<strong>:VimwikiDiaryNextDay</strong>
+</p>
+<blockquote>
+如果可以，打开下一个日记词条。
+映射到 &lt;C-Down&gt;
+</blockquote>
+
+<p>
+<strong>:VimwikiDiaryPrevDay</strong>
+</p>
+<blockquote>
+如果可以，打开上一个日记词条。
+映射到 &lt;C-Up&gt;。
+</blockquote>
+
+
+<p>
+==============================================================================
+5. Wiki 语法                                                  <strong>vimwiki-syntax</strong>
+</p>
+
+<p>
+这里有许多不同的 wiki， 许多情况下它们有自己的语法，vimwiki 也不例外。默认的
+vimwiki 语法是 google 的 wiki 语法标记的子集。
+</p>
+
+<p>
+MediaWiki 语法文件包含在这个发行版之中（不包含 MediaWiki 原始语法中那些花里胡哨
+的部分）。
+参考 |vimwiki-option-syntax|。
+</p>
+
+
+<hr />
+<p>
+5.1. 字型                                           <strong>vimwiki-syntax-typefaces</strong>
+</p>
+
+<p>
+下面简单给了一些用来控制修饰文本字型的语法： &gt;
+  <strong>粗体文本</strong>
+  <em>斜体文本</em>
+  <del>删除线</del>
+  <code>代码 (无语法) 文本</code>
+  上标<sup><small>脚本</small></sup>
+  下标<sub><small>脚本</small></sub>
+</p>
+
+<hr />
+<p>
+5.2. 词条                                               <strong>vimwiki-syntax-links</strong>
+</p>
+
+<p>
+内部链接~
+WikiWords: &gt;
+  CapitalizedWordsConnected
+</p>
+
+<p>
+你可以通过在前面加感叹号的方式来取消(驼峰式) Wiki 词条。 &gt;
+  !CapitalizedWordsConnected
+</p>
+
+<p>
+或者通过 |g:vimwiki_camel_case| 参数来完全禁用(驼峰式) WikiWord。
+</p>
+
+<p>
+词条里带空格时： &gt;
+  <a href="This is a link.html">This is a link</a>
+或： &gt;
+  <a href="链接源地址.html">链接描述</a>
+或： &gt;
+  <a href="链接源地址][链接描述.html">链接源地址][链接描述</a>
+</p>
+
+
+<p>
+外部链接~
+纯链接： &gt;
+ <a href="http://code.google.com/p/vimwiki">http://code.google.com/p/vimwiki</a>
+</p>
+
+<p>
+带描述的链接： &gt;
+ [<a href="http://habamax.ru/blog">http://habamax.ru/blog</a> habamax 的主页]
+</p>
+
+
+<p>
+图片及图片链接~
+Image link is the link with one of jpg, png or gif endings.
+图片链接就是以 jpg, png 或 gif 结尾的链接。
+纯图片链接： &gt;
+ <a href="http://someaddr.com/picture.jpg">http://someaddr.com/picture.jpg</a>
+在 html 中即： &gt;
+ &lt;img src="<a href="http://someaddr.com/picture.jpg"">http://someaddr.com/picture.jpg"</a> /&gt;
+</p>
+
+<p>
+本地图片链接： &gt;
+ <a href="images/pabloymoira.jpg.html">images/pabloymoira.jpg</a>
+在 html 中即： &gt;
+ &lt;img src="images/pabloymoira.jpg" /&gt;
+图片的路径（例如 images/pabloymoira.jpg）是相对于
+|vimwiki-option-path_html|的。
+</p>
+
+<p>
+双中括号内的图片链接： &gt;
+ <a href="http://habamax.ru/blog/wp-content/uploads/2009/01/2740254sm.jpg">http://habamax.ru/blog/wp-content/uploads/2009/01/2740254sm.jpg</a>
+在 html 中即： &gt;
+ &lt;img src="<a href="http://habamax.ru/">http://habamax.ru/</a> ... /.jpg" /&gt;
+</p>
+
+<p>
+双中括号内带描述信息的图片链接： &gt;
+ <a href="http://habamax.ru/blog/wp-content/uploads/2009/01/2740254sm.jpg">dance</a>
+在 html 中即： &gt;
+ &lt;a href="<a href="http://habamax.ru/">http://habamax.ru/</a> ... /.jpg"&gt;dance&lt;/a&gt;
+</p>
+
+<p>
+双中括号内带备用信息的图片链接： &gt;
+ <a href="http://habamax.ru/blog/wp-content/uploads/2009/01/2740254sm.jpg">dance|</a>
+在 html 中即: &gt;
+ &lt;img src="<a href="http://habamax.ru/">http://habamax.ru/</a> ... /.jpg" alt="dance"/&gt;
+</p>
+
+<p>
+双中括号内带备用信息和一些样式的图片链接： &gt;
+ <a href="http://helloworld.com/blabla.jpg">cool stuff|width:150px; height: 120px;</a>
+在 html 中即： &gt;
+ &lt;img src="<a href="http://helloworld.com/">http://helloworld.com/</a> ... /.jpg" alt="cool stuff"
+ style="width:150px; height:120px"/&gt;
+</p>
+
+<p>
+双中括号内带样式，但不带备用信息的图片链接： &gt;
+ <a href="http://helloworld.com/blabla.jpg">|width:150px; height: 120px;</a>
+在 html 中即： &gt;
+ &lt;img src="<a href="http://helloworld.com/">http://helloworld.com/</a> ... /.jpg" alt=""
+ style="width:150px; height:120px"/&gt;
+</p>
+
+<p>
+缩略图链接： &gt;
+ [<a href="http://someaddr.com/bigpicture.jpg">http://someaddr.com/bigpicture.jpg</a> <a href="http://someaddr.com/thumbnail.jpg]">http://someaddr.com/thumbnail.jpg]</a>
+或 &gt;
+ <a href="http://someaddr.com/bigpicture.jpg">http://someaddr.com/thumbnail.jpg</a>
+在 html 中即： &gt;
+ &lt;a href="<a href="http://someaddr.com/">http://someaddr.com/</a> ... /.jpg"&gt;
+  &lt;img src="<a href="http://../thumbnail.jpg">http://../thumbnail.jpg</a> /&gt;&lt;/a&gt;
+</p>
+
+
+<hr />
+<p>
+5.3. 标题                                             <strong>vimwiki-syntax-headers</strong>
+</p>
+
+<p>
+= 1 级标题 =~
+默认情况下，所有的标题都将使用 |hl-Title| 的样式风格来高亮。
+</p>
+
+<p>
+== 2 级标题 ==~
+你可以为每个标题级别设置不同的颜色： &gt;
+  :hi VimwikiHeader1 guifg=#FF0000
+  :hi VimwikiHeader2 guifg=#00FF00
+  :hi VimwikiHeader3 guifg=#0000FF
+  :hi VimwikiHeader4 guifg=#FF00FF
+  :hi VimwikiHeader5 guifg=#00FFFF
+  :hi VimwikiHeader6 guifg=#FFFF00
+为 6 个标题级别，或任何一个标题级别都不设置颜色。
+</p>
+
+<p>
+=== 3 级标题 ===~
+查看 |g:vimwiki_hl_headers|。
+</p>
+
+<p>
+==== 4 级标题 ====~
+===== 5 级标题 =====~
+ ====== 6 级标题 ======~
+</p>
+
+
+<p>
+你可以让标题在 html 中居中，只要在第一个 '=' 之前加入空格即可：
+</p>
+<blockquote>
+= 居中的 1 级标题 =~
+</blockquote>
+
+
+<hr />
+<p>
+5.4. 段落                                          <strong>vimwiki-syntax-paragraphs</strong>
+</p>
+
+<p>
+段落就是从第 1 列开始（无缩进）的行组成的块，段落间以一个空行分隔：
+</p>
+
+<p>
+这是第一个
+带有两行的段落。
+</p>
+
+<p>
+这是一个带有
+两行的段落。
+</p>
+
+<hr />
+<p>
+5.5. 列表                                               <strong>vimwiki-syntax-lists</strong>
+</p>
+
+<p>
+无序列表： &gt;
+</p>
+<ul>
+<li>
+符号列表项 1
+
+<li>
+符号列表项 2
+
+<ul>
+<li>
+符号列表子项 1
+
+<li>
+符号列表子项 2
+
+<li>
+等等 ...
+
+<ul>
+<li>
+等等 ...
+
+<li>
+...
+
+</ul>
+<li>
+符号列表子项 3
+
+<li>
+等等。
+
+</ul>
+</ul>
+<p>
+或： &gt;
+</p>
+<ul>
+<li>
+符号列表项 1
+
+<li>
+符号列表项 2
+
+<ul>
+<li>
+符号列表子项 1
+
+<li>
+符号列表子项 2
+
+<li>
+等等 ...
+
+<ul>
+<li>
+等等 ...
+
+<li>
+...
+
+</ul>
+<li>
+符号列表子项 3
+
+<li>
+等等。
+
+</ul>
+</ul>
+
+<p>
+或者混合使用： &gt;
+</p>
+<ul>
+<li>
+符号列表项 1
+
+<li>
+符号列表项 2
+
+<ul>
+<li>
+符号列表子项 1
+
+<li>
+符号列表子项 2
+
+<li>
+等等 ...
+
+<ul>
+<li>
+等等 ...
+
+<li>
+...
+
+</ul>
+<li>
+符号列表子项 3
+
+<li>
+等等。
+
+</ul>
+</ul>
+
+<p>
+有序列表 &gt;
+</p>
+<ol>
+<li>
+编号列表项 1
+
+<li>
+编号列表项 2
+
+<ol>
+<li>
+编号列表子项 1
+
+<li>
+编号列表子项 2
+
+<li>
+等等 ...
+
+<ol>
+<li>
+等等 ...
+
+<li>
+...
+
+</ol>
+<li>
+编号列表子项 3
+
+<li>
+等等。
+
+</ol>
+</ol>
+
+<p>
+也可以混合使用符号列表和编号列表： &gt;
+</p>
+<ul>
+<li>
+符号列表项 1
+
+<li>
+符号列表项 2
+
+<ol>
+<li>
+编号列表子项 1
+
+<li>
+编号列表子项 2
+
+</ol>
+</ul>
+
+<p>
+Note *, - 或 # 之后的空格是必须的。
+</p>
+
+<p>
+多行列表项： &gt;
+</p>
+<ul>
+<li>
+符号列表项 1
+    列表项 1 的续行。
+    列表项 1 的更多续行。
+
+<li>
+符号列表项 2
+
+<ul>
+<li>
+符号列表子项 1
+      列表子项 1 续行
+      列表子项 1 更多续行。
+
+<li>
+符号列表子项 2
+
+<li>
+等等。
+
+</ul>
+</ul>
+
+<p>
+定义列表： &gt;
+<dl>
+<dt>术语 1</dt>
+<dd>定义 1</dd>
+<dt>术语 2</dt>
+</dl>
+::定义 2
+::定义 3
+（译注：这里可能有缩进错误）
+</p>
+
+
+<hr />
+<p>
+5.6. 表格                                              <strong>vimwiki-syntax-tables</strong>
+</p>
+
+<p>
+表格是每个单元格有竖线分隔符 | 构成的内容，你也可以在表格单元格中插入其他内联
+的 wiki 语法，包括字体样式和链接。
+例如： &gt;
+</p>
+
+<table class='center'>
+<tr>
+<td>
+年
+</td>
+<td>
+最低温度
+</td>
+<td>
+最高温度
+</td>
+</tr>
+<tr>
+<td>
+------+------------+--------
+</td>
+</tr>
+<tr>
+<td>
+1900
+</td>
+<td>
+-10
+</td>
+<td>
+25
+</td>
+</tr>
+<tr>
+<td>
+1910
+</td>
+<td>
+-15
+</td>
+<td>
+30
+</td>
+</tr>
+<tr>
+<td>
+1920
+</td>
+<td>
+-10
+</td>
+<td>
+32
+</td>
+</tr>
+<tr>
+<td>
+1930
+</td>
+<td>
+<em>N/A</em>
+</td>
+<td>
+<em>N/A</em>
+</td>
+</tr>
+<tr>
+<td>
+1940
+</td>
+<td>
+-2
+</td>
+<td>
+40
+</td>
+</tr>
+</table>
+<p>
+&gt;
+</p>
+
+<p>
+下面的这部分，在 html 中高亮为表头样式： &gt;
+<table class='center'>
+<tr>
+<td>
+年
+</td>
+<td>
+最低温度
+</td>
+<td>
+最高温度
+</td>
+</tr>
+<tr>
+<td>
+------+----------+----------
+</td>
+</tr>
+</table>
+&lt;
+</p>
+
+<p>
+如果表格被缩进，这在 html 页面中这个表格会居中。
+</p>
+
+<p>
+关于如何管理表格的详细信息，可以参考 |vimwiki-tables|。
+</p>
+
+<p>
+备注： 你可以在表格中使用 <a href="链接地址.html">描述信息</a> 的链接类型，
+或使用 <a href="链接地址][描述信息.html">链接地址][描述信息</a> 来替代。
+</p>
+
+
+<hr />
+<p>
+5.7. 预格式化文本                                <strong>vimwiki-syntax-preformatted</strong>
+</p>
+
+<p>
+使用 {{{ 和 }}} 来定义预格式化文本块：
+</p>
+<pre  &gt;>
+  Tyger! Tyger! burning bright
+   In the forests of the night,
+    What immortal hand or eye
+     Could frame thy fearful symmetry?
+  In what distant deeps or skies
+   Burnt the fire of thine eyes?
+    On what wings dare he aspire?
+     What the hand dare sieze the fire?
+</pre>
+
+
+<p>
+你也可以添加附加信息到 {{{ 标签： &gt;
+</p>
+<pre class="brush: python" &gt;>
+ def hello(world):
+     for x in range(10):
+         print("Hello {0} number {1}".format(world, x))
+</pre>
+
+<p>
+导出的 HTML 结果是： &gt;
+ &lt;pre class="brush: python"&gt;
+ def hello(world):
+</p>
+<blockquote>
+for x in range(10):
+print("Hello {0} number {1}".format(world, x))
+</blockquote>
+<p>
+ &lt;/pre&gt;
+</p>
+
+<p>
+这就可以使用类似 google syntax highlighter 这样的 js
+代码着色器这样有用的工具了。
+</p>
+
+<p>
+可以设置 vimwiki 来高亮预格式化代码片段。
+参考 |vimwiki-option-nested_syntaxes|
+</p>
+
+<hr />
+<p>
+5.8. 块级引用                                     <strong>vimwiki-syntax-blockquotes</strong>
+</p>
+
+<p>
+以 4 个以上空格开始的文本，就是一个引用块。
+</p>
+<blockquote>
+这在 vimwiki 中是一个引用块，它在 vim 中不会被高亮，但是可以使用样式表让
+它在 html 中高亮，块级引用通常用来引用其他来源的较长文本片段。
+</blockquote>
+
+<hr />
+<p>
+5.9. 注释                                            <strong>vimwiki-syntax-comments</strong>
+</p>
+
+<p>
+在 &lt;!-- 和 --&gt; 之间的文本是一个注释。
+例如： &gt;
+ &lt;!-- this text would not be in HTML --&gt;
+&lt;
+</p>
+
+<p>
+==============================================================================
+6. 代码折叠/大纲                                             <strong>vimwiki-folding</strong>
+</p>
+
+<p>
+Vimwiki 可以根据标题和列表项来折叠或显示大纲。
+</p>
+
+<p>
+例如：
+</p>
+<h1 id="toc_2">我的当前任务</h1>
+<ul>
+<li class="done0">
+做某事 1
+
+<ul>
+<li class="done0">
+做某事的子步骤 1.1
+
+<li class="done0">
+做某事的子步骤 1.2
+
+<ul>
+<li class="done0">
+做某事的子步骤 1.2.1
+
+<li class="done0">
+做某事的子步骤 1.2.2
+
+</ul>
+<li class="done0">
+做某事的子步骤 1.3
+
+</ul>
+<li class="done0">
+做某事 2
+
+<li class="done0">
+做某事 3
+
+</ul>
+
+<p>
+击 |zM| 键：
+= 我的当前任务 = [8] --------------------------------------~
+</p>
+
+<p>
+击 |zr| 键：
+= 我的当前任务 =~
+</p>
+<ul>
+<li class="done0">
+做某事 1 [5] --------------------------------------~
+
+<li class="done0">
+做某事 2~
+
+<li class="done0">
+做某事 3~
+
+</ul>
+
+<p>
+击 |zr| 键更多次：
+= 我的当前任务 =~
+</p>
+<ul>
+<li class="done0">
+做某事 1~
+
+<ul>
+<li class="done0">
+做某事的子步骤 1.1~
+
+<li class="done0">
+做某事的子步骤 1.2 [2] -------------------------------~
+
+<li class="done0">
+做某事的子步骤 1.3~
+
+</ul>
+<li class="done0">
+做某事 2~
+
+<li class="done0">
+做某事 3~
+
+</ul>
+
+<p>
+备注： 不论是否使用默认语法，只要是使用 |shiftwidth| 来缩进，在列表项是的折叠
+都会正常工作。对于 MediaWiki 来说，* 和 # 都应该放在第一列。
+</p>
+
+<p>
+设置 |g:vimwiki_folding| 来启用/禁用折叠。
+</p>
+
+<p>
+==============================================================================
+7. 占位符                                               <strong>vimwiki-placeholders</strong>
+</p>
+
+<hr />
+<h1>目录                            *vimwiki-toc* *vimwiki-table-of-contents*</h1>
+<div class="toc">
+<ul>
+<li><a href="#toc_1">我的知识库</a>
+<li><a href="#toc_2">我的当前任务</a>
+<li><a href="#toc_3">可切换的待办列表项</a>
+<li><a href="#toc_4">可切换的待办列表项</a>
+<li><a href="#toc_5">可切换的待办列表项</a>
+<li><a href="#toc_6">Diary</a>
+<li><a href="#toc_7">Diary</a>
+<li><a href="#toc_8">Diary</a>
+</ul>
+</div>
+
+<p>
+从某个 wiki 生成 html 时，可以添加目录到 html 页面中。
+只需要输入 &gt;
+</p>
+<div class="toc">
+<ul>
+<li><a href="#toc_1">我的知识库</a>
+<li><a href="#toc_2">我的当前任务</a>
+<li><a href="#toc_3">可切换的待办列表项</a>
+<li><a href="#toc_4">可切换的待办列表项</a>
+<li><a href="#toc_5">可切换的待办列表项</a>
+<li><a href="#toc_6">Diary</a>
+<li><a href="#toc_7">Diary</a>
+<li><a href="#toc_8">Diary</a>
+</ul>
+</div>
+
+
+<p>
+到 wiki 页面。
+还可以给“目录”添加标题： &gt;
+</p>
+
+
+<h1>目录</h1>
+<div class="toc">
+<ul>
+<li><a href="#toc_1">我的知识库</a>
+<li><a href="#toc_2">我的当前任务</a>
+<li><a href="#toc_3">可切换的待办列表项</a>
+<li><a href="#toc_4">可切换的待办列表项</a>
+<li><a href="#toc_5">可切换的待办列表项</a>
+<li><a href="#toc_6">Diary</a>
+<li><a href="#toc_7">Diary</a>
+<li><a href="#toc_8">Diary</a>
+</ul>
+</div>
+<p>
+或者 &gt;
+</p>
+
+
+<h1>随便什么</h1>
+<div class="toc">
+<ul>
+<li><a href="#toc_1">我的知识库</a>
+<li><a href="#toc_2">我的当前任务</a>
+<li><a href="#toc_3">可切换的待办列表项</a>
+<li><a href="#toc_4">可切换的待办列表项</a>
+<li><a href="#toc_5">可切换的待办列表项</a>
+<li><a href="#toc_6">Diary</a>
+<li><a href="#toc_7">Diary</a>
+<li><a href="#toc_8">Diary</a>
+</ul>
+</div>
+
+<hr />
+
+<p>
+When you htmlize your wiki page you have default title which is the filename
+of the page.
+为 wiki 页面生成 html 时，默认使用文件名做为标题。
+如果希望使用另一个标题，在 wiki 页面中加入： &gt;
+</p>
+
+<p>
+&lt;
+</p>
+
+
+<hr />
+<p>
+<a href="%nohtml.html">%nohtml</a>                                                       <strong>vimwiki-nohtml</strong>
+</p>
+
+<p>
+如果不希望 wiki 被转为 html 页面， wiki 中输入： &gt;
+</p>
+<blockquote>
+<a href="%nohtml.html">%nohtml</a>
+</blockquote>
+
+
+<p>
+==============================================================================
+8. 待办事项列表(Todo lists)                               <strong>vimwiki-todo-lists</strong>
+</p>
+
+<p>
+可以(使用 Vimwiki)来做待办事项列表 -- 一个可以切换选中/反选的项目列表。
+</p>
+
+<p>
+参考如下示例：
+</p>
+<h1 id="toc_3">可切换的待办列表项</h1>
+<ul>
+<li class="done4">
+切换列表项开/关。
+
+<ul>
+<li class="done4">
+简单的在 [ ] 和 [X] 之间切换。
+
+<li class="done4">
+所有的列表子项将被适当的切换为开/关。
+
+<li class="done4">
+仅当当前行是列表项时，切换子项。
+
+<li class="done4">
+父列表项将受子列表项的切换影响。
+
+</ul>
+<li class="done4">
+同样支持编号列表项的切换。
+
+<li class="done4">
+添加高亮到列表项的复选框。
+
+<li class="done4">
+使用 o, O 和 &lt;CR&gt; 创建新行时，新列表项会带 [ ]。(译注：&lt;CR&gt;没有带 [ ])
+
+</ul>
+
+
+<p>
+在第一个列表项按 &lt;C-Space&gt; 会切换所有的子项：
+(译注：&lt;C-Space&gt; 一般是中文输入法的热键，可以自定义键盘映射)
+</p>
+<h1 id="toc_4">可切换的待办列表项</h1>
+<ul>
+<li class="done0">
+切换列表项开/关。
+
+<ul>
+<li class="done0">
+简单的在 [ ] 和 [X] 之间切换。
+
+<li class="done0">
+所有的列表子项将被适当的切换为开/关。
+
+<li class="done0">
+仅当当前行是列表项时，切换子项。
+
+<li class="done0">
+父列表项将受子列表项的切换影响。
+
+</ul>
+<li class="done4">
+同样支持编号列表项的切换。
+
+<li class="done4">
+添加高亮到列表项的复选框。
+
+<li class="done4">
+使用 o, O 和 &lt;CR&gt; 创建新行时，新列表项会带 [ ]。
+
+</ul>
+
+<p>
+在第三个列表项是按 &lt;C-Space&gt; 将切换自身和其父项：
+</p>
+<h1 id="toc_5">可切换的待办列表项</h1>
+<ul>
+<li class="done1">
+切换列表项开/关。
+
+<ul>
+<li class="done0">
+简单的在 [ ] 和 [X] 之间切换。
+
+<li class="done4">
+所有的列表子项将被适当的切换为开/关。
+
+<li class="done4">
+仅当当前行是列表项时，切换子项。
+
+<li class="done4">
+父列表项将受子列表项的切换影响。
+
+</ul>
+<li class="done4">
+同样支持编号列表项的切换。
+
+<li class="done4">
+添加高亮到列表项的复选框。
+
+<li class="done4">
+使用 o, O 和 &lt;CR&gt; 创建新行时，新列表项会带 [ ]。
+
+</ul>
+
+<p>
+父项会受子项的切换影响，[ ] 中的符号与子项百分比对照如
+（也可参考 |g:vimwiki_listsyms| ）：
+</p>
+<blockquote>
+[ ] -- 0%
+[.] -- 1-33%
+[o] -- 34-66%
+[O] -- 67-99%
+[X] -- 100%
+</blockquote>
+
+<p>
+在可视模式下，可以批量切换多个列表项。
+</p>
+
+
+<p>
+==============================================================================
+9. 表格                                                       <strong>vimwiki-tables</strong>
+</p>
+
+<p>
+使用 :VimwikiTable 命令默认创建 5 列 2 行的表格： &gt;
+</p>
+
+<table class='center'>
+<tr>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+---+---+---+---+---
+</td>
+</tr>
+<tr>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+</table>
+<p>
+&lt;
+</p>
+
+<p>
+表格会自动格式化，我们先加些文本到第一个表格单元中： &gt;
+</p>
+
+<table class='center'>
+<tr>
+<td>
+姓氏
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+---+---+---+---+---
+</td>
+</tr>
+<tr>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+</table>
+<p>
+&lt;
+</p>
+
+<p>
+无论按 &lt;TAB&gt;, &lt;CR&gt; 还是离开插入模式，表格都将被格式化： &gt;
+(译注 I：&lt;TAB&gt; 键会与其他使用 &lt;TAB&gt; 键的脚本(如snipMate)冲突，可以重新映射其他
+热键；
+译注 II：0.9.9及之前版本对于双宽字符的格式化有问题，1.0 beta之后有修正。)
+&gt;
+<table class='center'>
+<tr>
+<td>
+姓氏
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+------+---+---+---+---
+</td>
+</tr>
+<tr>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+</table>
+&lt;
+</p>
+
+
+<p>
+你可以轻易的创建看起来不错的文本风格的表格，只需要按 &lt;TAB&gt; 键并输入新值： &gt;
+</p>
+
+<table class='center'>
+<tr>
+<td>
+姓氏
+</td>
+<td>
+名字
+</td>
+<td>
+年龄
+</td>
+<td>
+城市
+</td>
+<td>
+电子邮件
+</td>
+</tr>
+<tr>
+<td>
+------------+------------+------+------------+----------------------
+</td>
+</tr>
+<tr>
+<td>
+Vladislav
+</td>
+<td>
+Pokrishkin
+</td>
+<td>
+31
+</td>
+<td>
+莫斯科
+</td>
+<td>
+vlad_pok@smail.com
+</td>
+</tr>
+<tr>
+<td>
+James
+</td>
+<td>
+Esfandiary
+</td>
+<td>
+27
+</td>
+<td>
+伊斯坦布尔
+</td>
+<td>
+esfandiary@tmail.com
+</td>
+</tr>
+</table>
+<p>
+&lt;
+</p>
+
+<p>
+格式化表格可以使用 'gqq' 快捷键。
+</p>
+
+
+
+<p>
+==============================================================================
+10. 日记                                                      <strong>vimwiki-diary</strong>
+</p>
+
+<p>
+日记功能可帮助你记录日常笔记，你能够非常容易地将分类的日记添加至Vimwiki中，
+只要按下&lt;Leader&gt;w&lt;Leader&gt;w，即可以当前的日期为名来创建新的笔记，
+这个新创建的笔记文件，会保存在diary目录中。
+</p>
+
+<p>
+现在，你可以参考下面示例来创建你的日记：
+  今天是2010-01-27。
+</p>
+
+<p>
+  按 \w\w 打开日记首页。
+  ~/vimwiki/diary.wiki is created.
+</p>
+
+<p>
+  2 把下面几行添加到 ~/vimwiki/diary/diary.wiki 文件中
+</p>
+<h1 id="toc_6" class="justcenter">Diary</h1>
+<table class='center'>
+<tr>
+<td>
+<a href="2010-01-27.html">2010-01-27</a>
+</td>
+</tr>
+</table>
+
+<p>
+  ~/vimwiki/diary/2010-01-27.wiki is created.
+  这样，就生成了以当前日期命中的wiki日记文件，你可在这个日记中记录事项了。
+  要是你没做键盘映射，你可在Vim命令模式执行:VimwikiMakeDiaryNote，也可以进入日记页。
+  -------------------------------------------
+</p>
+
+<p>
+  撰写第二天的日记
+  按 \w\w 。
+</p>
+
+<p>
+  打开~/vimwiki/diary/diary.wiki文件后，在 = Diary = 下的第一行增加第二天
+  的日期即可。
+</p>
+
+<h1 id="toc_7" class="justcenter">Diary</h1>
+<table class='center'>
+<tr>
+<td>
+<a href="2010-01-28.html">2010-01-28</a>
+</td>
+<td>
+<a href="2010-01-27.html">2010-01-27</a>
+</td>
+</tr>
+</table>
+
+<p>
+  ~/vimwiki/diary/2010-01-28.wiki is created.
+  这样，就创建第二天的日记了，你可以添加信息在这个日记中。.
+&gt;
+默认情况下在一行创建4个链接，所有的链接都以日期进行分类的。
+</p>
+
+
+<p>
+集成日历功能                                                <strong>vimwiki-calendar</strong>
+<hr />
+如果你已经安装了Calendar.vim插件，你可以使用它来创建笔记。
+在命令模式执行:Calendar，并按&lt;Enter&gt;键，会在diary目录创建以当前日期为名.Wiki文件。
+嗯，这种方式创建的日记比前面的方法好多了。
+</p>
+
+<p>
+Calendar.vim的插件，你可以在这下载：<a href="http://www.vim.org/scripts/script.php?script_id=52">http://www.vim.org/scripts/script.php?script_id=52</a>
+</p>
+
+
+<p>
+参考 |g:vimwiki_use_calendar| 选项用来启用/禁用日历。
+</p>
+
+
+
+<p>
+==============================================================================
+11. 选项                                                      <strong>vimwiki-options</strong>
+可以通过全局或者每个 wiki (局部)的选项来设置 vimwki，所有的全局选项都使用如下模板来设置：
+</p>
+<blockquote>
+let g:option_name=option_value
+</blockquote>
+
+<p>
+你可以参考下面的|g:vimwiki_list|说明与实例，在_vimrc文件中配置相关参数。
+</p>
+
+<hr />
+<p>
+<strong>g:vimwiki_list</strong> <strong>vimwiki-multiple-wikies</strong>
+</p>
+
+<p>
+一般形式：
+  {'option1': 'value1', 'option2: 'value2', ...}
+</p>
+
+<p>
+请参考下面的例子：
+  let g:vimwiki_list = [{'path': '~/my_site/', 'path_html': '~/public_html/'}]
+</p>
+
+<p>
+打开Vimwiki时会定向到 ~/my_site/ 目录，而生成的网页文件会储存在 ~/public_html/
+目录。
+</p>
+
+<p>
+下一个例子：
+  let g:vimwiki_list = [{'path': '~/my_site/', 'path_html': '~/public_html/'},
+</p>
+<blockquote>
+\ {'path': '~/my_docs/', 'ext': '.mdox'}]
+</blockquote>
+<p>
+在上面的示例中，第二行表示增加了2个wiki，第二个会定向至 ~/my_docs/
+、ext、.mdox目录中。.
+</p>
+
+<p>
+在 g:vimwiki_list 设置空目录，其选项为如下： &gt;
+  let g:vimwiki_list = [{},
+</p>
+<blockquote>
+\ {'path': '~/my_docs/', 'ext': '.mdox'}]
+</blockquote>
+
+<p>
+[注] 译者的设置如下： &gt;
+</p>
+<blockquote>
+let g:vimwiki_list = [{'path': 'F:/File/My Dropbox/VimWiki/A0.WikiIndex/',
+\ 'path_html': 'F:/File/My Dropbox/VimWiki/Z0.OutHtml',
+\ 'html_header': 'F:/File/My Dropbox/VimWiki/Z0.Template/header.tpl',}]
+</blockquote>
+<p>
+&lt;
+</p>
+
+<p>
+你也可以用 |Dictionary| 分隔来创建多个 Wiki。 &gt;
+</p>
+<blockquote>
+let wiki_1 = {}
+let wiki_1.path = '~/my_docs/'
+let wiki_1.html_header = '~/public_html/header.tpl'
+let wiki_1.nested_syntaxes = {'python': 'python', 'c++': 'cpp'}
+</blockquote>
+<blockquote>
+let wiki_2 = {}
+let wiki_2.path = '~/project_docs/'
+let wiki_2.index = 'main'
+</blockquote>
+<blockquote>
+let g:vimwiki_list = [wiki_1, wiki_2]
+</blockquote>
+
+<p>
+&lt;
+</p>
+
+<p>
+PER WIKI OPTIONS                                         <strong>viwmiki-local-options</strong>
+(局部 WIKI 选项)
+</p>
+
+
+<p>
+<strong>vimwiki-option-path</strong>
+<hr />
+选项             缺省值
+path            ~/vimwiki/
+</p>
+
+<p>
+描述
+定向至Wiki文件夹：
+  let g:vimwiki_list = [{'path': '~/my_site/'}]
+</p>
+
+
+<p>
+<strong>vimwiki-option-path_html</strong>
+<hr />
+选项             缺省值
+path_html       ~/vimwiki_html/
+</p>
+
+<p>
+描述
+wiki转换为HTML网页格式的定向位置：
+  let g:vimwiki_list = [{'path': '~/my_site/',
+</p>
+<blockquote>
+\ 'path_html': '~/my_site_html/'}]
+</blockquote>
+
+
+<p>
+如果省略 path_html 的"/"号及"_html"选项，可能无法生成网页，例如下面的示例： &gt;
+  let g:vimwiki_list = [{'path': '~/okidoki/'}]
+</p>
+
+<p>
+建议修改为 path_html = '~/okidoki_html/'
+</p>
+
+<p>
+<strong>vimwiki-option-auto_export</strong>
+<hr />
+选项            缺省值            值~
+auto_export     0                 0, 1
+</p>
+
+<p>
+描述
+执行保存wiki页时，若设置此项值为1时，将自动生成HTML文件
+  let g:vimwiki_list = [{'path': '~/my_site/', 'auto_export': 1}]
+</p>
+
+<p>
+这会使你的HTML文件保持最新的！
+</p>
+
+<p>
+<strong>vimwiki-option-index</strong>
+<hr />
+选项            缺省值
+index           index
+</p>
+
+<p>
+描述
+wiki的首页名
+  let g:vimwiki_list = [{'path': '~/my_site/', 'index': 'main'}]
+</p>
+
+<p>
+NOTE: 不要添加文件扩展名！
+</p>
+
+
+<p>
+<strong>vimwiki-option-ext</strong>
+<hr />
+选项             缺省值
+ext             .wiki
+</p>
+
+<p>
+描述
+wiki文件扩展名
+  let g:vimwiki_list = [{'path': '~/my_site/',
+</p>
+<blockquote>
+\ 'index': 'main', 'ext': '.document'}]
+</blockquote>
+
+
+<p>
+<strong>vimwiki-option-syntax</strong>
+<hr />
+选项            缺省值            值
+syntax          default           default, media
+</p>
+
+<p>
+描述
+Wiki语法加色
+你可以使用不同的标记语言(当前缺省的为vimwiki与MediaWiki的语法标记)，但只有在Vimwiki预设标记
+不能转换HTML时才有效。
+使用MediaWiki的标记： &gt;
+  let g:vimwiki_list = [{'path': '~/my_site/', 'syntax': 'media'}]
+&lt;
+</p>
+
+<p>
+<strong>vimwiki-option-html_header</strong>
+<hr />
+选项             缺省值
+html_header
+</p>
+
+<p>
+描述
+设置html文件头模板：
+  let g:vimwiki_list = [{'path': '~/my_site/',
+</p>
+<blockquote>
+\ 'html_header': '~/public_html/header.tpl'}]
+</blockquote>
+
+<p>
+这个header.tpl模板代码，你可以参考下面的： &gt;
+</p>
+<blockquote>
+&lt;html&gt;
+&lt;head&gt;
+&lt;link rel="Stylesheet" type="text/css" href="%root_path%style.css" /&gt;
+&lt;title&gt;%title%&lt;/title&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+<div class="contents">
+</blockquote>
+
+<p>
+变量说明
+  %root_path% 显示根目录的相对路径。
+</p>
+<blockquote>
+例如 wiki 词条为 <a href="dir1/dir2/dir3/WikiLink.html">dir1/dir2/dir3/WikiLink</a>
+则 %root_path% 会被替换为 '../../../'。
+</blockquote>
+
+
+<p>
+<strong>vimwiki-option-html_footer</strong>
+<hr />
+选项             缺省值
+html_footer
+</p>
+
+<p>
+描述
+设置html文件页脚模板：
+  let g:vimwiki_list = [{'path': '~/my_site/',
+</p>
+<blockquote>
+\ 'html_footer': '~/public_html/footer.tpl'}]
+</blockquote>
+
+<p>
+可参考如下页脚模板footer.tpl文件代码：
+</p>
+<blockquote>
+</div>
+&lt;/body&gt;
+&lt;/html&gt;
+</blockquote>
+
+
+<p>
+<strong>vimwiki-option-css_name</strong>
+<hr />
+选项            缺省值
+css_name        style.css
+</p>
+
+<p>
+描述
+设置.css文件名：
+  let g:vimwiki_list = [{'path': '~/my_pages/',
+</p>
+<blockquote>
+\ 'css_name': 'main.css'}]
+</blockquote>
+
+<p>
+或者 &gt;
+  let g:vimwiki_list = [{'path': '~/my_pages/',
+</p>
+<blockquote>
+\ 'css_name': 'css/main.css'}]
+</blockquote>
+<p>
+&lt;
+</p>
+
+<p>
+<strong>vimwiki-option-maxhi</strong>
+<hr />
+选项            缺省值            值~
+maxhi           1                 0, 1
+</p>
+
+<p>
+描述~
+不存在 Wiki 词条，即红色高亮标记的关键字，会使操作变慢，比如切换啥的。
+如果不想让文件系统总是检查 Wiki 词条，可以将 maxhi 的值设为 0。
+例如:
+  let g:vimwiki_list = [{'path': '~/my_site/', 'maxhi': 0}]
+</p>
+
+
+
+
+<p>
+<strong>vimwiki-option-nested_syntaxes</strong>
+<hr />
+选项             缺省值           值~
+nested_syntaxes {}                成对的高亮关键字，或者vim的文件类型
+</p>
+
+<p>
+描述~
+你可以在Vim显示不同的语言语法高亮，像C++、Pytho等语法高亮。
+例如下面在你的 vimrc 中的设置： &gt;
+  let wiki = {}
+  let wiki.path = '~/my_wiki/'
+  let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp'}
+  let g:vimwiki_list = [wiki]
+</p>
+
+<p>
+设置 python、c++ 高亮: &gt;
+</p>
+<pre class="brush: python">
+ for i in range(1, 5):
+     print(i)
+</pre>
+
+<pre class="brush: c++">
+ #include "helloworld.h"
+ int helloworld()
+ {
+    printf("hello world");
+ }
+</pre>
+
+<p>
+或者： &gt;
+</p>
+<pre c++>
+ #include "helloworld.h"
+ int helloworld()
+ {
+    printf("hello world");
+ }
+</pre>
+
+<pre python>
+ for i in range(1, 5):
+     print(i)
+</pre>
+
+
+
+<p>
+<strong>vimwiki-option-diary_rel_path</strong>
+<hr />
+选项            缺省值~
+diary_rel_path  diary/
+</p>
+
+<p>
+描述~
+|vimwiki-option-path|的路径用以重新载入日记文件夹。
+</p>
+
+
+<p>
+<strong>vimwiki-option-diary_index</strong>
+<hr />
+选项            缺省值
+diary_index     diary
+</p>
+
+<p>
+描述~
+diary文件夹用来保存以日期命名的wiki文件，diary文件名可自定义别的文件名。
+</p>
+
+
+<p>
+<strong>vimwiki-option-diary_header</strong>
+<hr />
+选项            缺省值~
+diary_header    Diary
+</p>
+
+<p>
+描述~
+在 |vimwik-option-diary_index| 中的名称将链接到以日期命名的 wiki 文件。
+</p>
+
+
+<p>
+<strong>vimwiki-option-diary_link_count</strong>
+<hr />
+Key               Default value~
+diary_link_count  4
+</p>
+
+<p>
+描述~
+每一行显示日期链接的最大数目。
+例如:
+</p>
+<h1 id="toc_8">Diary</h1>
+<table>
+<tr>
+<td>
+<a href="2010-01-30.html">2010-01-30</a>
+</td>
+<td>
+<a href="2010-01-29.html">2010-01-29</a>
+</td>
+<td>
+<a href="2010-01-28.html">2010-01-28</a>
+</td>
+<td>
+<a href="2010-01-27.html">2010-01-27</a>
+</td>
+</tr>
+<tr>
+<td>
+<a href="2010-01-26.html">2010-01-26</a>
+</td>
+<td>
+<a href="2010-01-25.html">2010-01-25</a>
+</td>
+</tr>
+</table>
+
+
+
+
+<p>
+GLOBAL OPTIONS                                        <strong>viwmiki-global-options</strong>
+(全局选项)
+</p>
+
+<p>
+使用: &gt;
+</p>
+<blockquote>
+let g:option_name=option_value
+</blockquote>
+<p>
+来设置。
+</p>
+
+<hr />
+<p>
+<strong>g:vimwiki_hl_headers</strong>
+</p>
+
+<p>
+高亮标题颜色： =Reddish=, ==Greenish==, ===Blueish===
+</p>
+
+<p>
+值              描述~
+1               使用预先定义的颜色高亮不同级别的标题。
+0               使用 |hl-Title| 或  VimwikiHeader1-VimwikiHeader6 (如果已定义
+</p>
+<blockquote>
+了颜色主题的话)
+</blockquote>
+
+<p>
+缺省值为: 1
+</p>
+
+
+<hr />
+<p>
+<strong>g:vimwiki_hl_cb_checked</strong>
+</p>
+
+<p>
+选中列表项可以高亮显示的颜色:
+</p>
+
+<ul>
+<li class="done4">
+整行高亮，可将选项值设为1.
+
+<li class="done0">
+我希望 Vim 可以使用 strikethru(?).
+
+</ul>
+
+<p>
+值              描述~
+1               用组名( |group-name| ) 为 "Comment" 的语法高亮选中的复选框。
+0               不要高亮
+</p>
+
+<p>
+缺省值: 0
+</p>
+
+
+<hr />
+<p>
+<strong>g:vimwiki_global_ext</strong> <strong>vimwiki-temporary-wiki</strong>
+</p>
+
+<p>
+如果一个扩展名是 wiki 的文件被打开，而它有所在的目录不在 |g:vimwiki_list| 列表中，
+则：
+</p>
+
+<p>
+值              描述~
+1               标记这个目录为临时wiki.
+0               不标记这个目录为临时wiki.
+</p>
+
+<p>
+缺省值: 1
+</p>
+
+
+<hr />
+<p>
+<strong>g:vimwiki_upper</strong> <strong>g:vimwiki_lower</strong>
+</p>
+
+<p>
+这会影响词条的检测。
+在默认情况下，词条会检测使用英语、俄语的字母。
+你可以设置为自己的: &gt;
+  let g:vimwiki_upper = "A-Z\u0410-\u042f"
+  let g:vimwiki_lower = "a-z\u0430-\u044f"
+</p>
+
+
+<hr />
+<p>
+<strong>g:vimwiki_auto_checkbox</strong>
+</p>
+
+<p>
+如果开启，创建复选框会触发列表项目。.
+</p>
+
+<p>
+值              描述~
+0               不要创建复选框。
+1               创造复选框。
+</p>
+
+<p>
+缺省值: 1
+</p>
+
+<p>
+例如:
+执行 &lt;C-Space&gt; (|:VimwikiToggleListItem|) 在一个列表项没有复选框来创建它： &gt;
+</p>
+<ul>
+<li>
+List item
+
+</ul>
+<p>
+结果: &gt;
+</p>
+<ul>
+<li class="done0">
+List item
+
+</ul>
+
+
+<hr />
+<p>
+<strong>g:vimwiki_menu</strong>
+</p>
+
+<p>
+用 GUI 菜单来选择可用的 wiki。
+</p>
+
+<p>
+值                 描述~
+''                 没有菜单
+'Vimwiki'          顶层菜单"Vimwiki"
+'Plugin.Vimwiki'   "Vimwiki" 子菜单的顶层菜单 "Plugin" 等。
+</p>
+
+<p>
+缺省值: 'Vimwiki'
+</p>
+
+<hr />
+<p>
+<strong>g:vimwiki_stripsym</strong>
+</p>
+
+<p>
+更改脚本符号 -- 在Windows你不能使用 /*?&lt;&gt;" 作为文件名，所以 vimwiki 替换它们为
+自然符号。( _ 是缺省) ：
+</p>
+<blockquote>
+let g:vimwiki_stripsym = '_'
+</blockquote>
+
+<p>
+你可以将它更改为空格，例子： &gt;
+</p>
+<blockquote>
+let g:vimwiki_stripsym = ' '
+</blockquote>
+
+<hr />
+<p>
+<strong>g:vimwiki_badsyms</strong>
+</p>
+
+<p>
+你可能不喜欢文件名中包含空格（就像其他 vimwiki 用户一样），如果这样，你可以
+设置将那些坏字符转换为指定的字符
+|g:vimwiki_stripsym|: &gt;
+</p>
+<blockquote>
+let g:vimwiki_badsyms = ' '
+</blockquote>
+
+<p>
+现在所有的 <a href="links with spaces.html">links with spaces</a> 将被创建类似 'links_with_spaces' 这样的文件。
+</p>
+
+<p>
+这个选项是 |g:vimwiki_stripsym| 的一个补充。
+</p>
+
+<hr />
+<p>
+<strong>g:vimwiki_listsyms</strong>
+</p>
+
+<p>
+列表复选框中 5 个字符的字符串（译注：用来表示列表项的完成度）。
+默认值是 ' .oOX'。
+</p>
+
+<p>
+g:vimwiki_listsyms[0] 是完成 0% 的项。
+g:vimwiki_listsyms[4] 是完成 100% 的项。
+</p>
+
+<hr />
+<p>
+<strong>g:vimwiki_use_mouse</strong>
+</p>
+
+<p>
+从 |vimwiki-local-mappings| 处使用局部鼠标映射。
+</p>
+
+<p>
+值              描述~
+0               不使用鼠标映射。
+1               使用鼠标映射。
+</p>
+
+<p>
+默认值: 0
+</p>
+
+<hr />
+<p>
+<strong>g:vimwiki_folding</strong>
+</p>
+
+<p>
+启用/禁用 vimwiki 的折叠/大纲。 vimwiki 使用 'expr' 折叠方法(foldmethod)，它
+很灵活但是性能很低。
+</p>
+
+<p>
+值              描述~
+0               禁用折叠。
+1               启用折叠。
+</p>
+
+<p>
+默认值: 0
+</p>
+
+<hr />
+<p>
+<strong>g:vimwiki_fold_lists</strong>
+</p>
+
+<p>
+启用/禁用 折叠子列表项。
+</p>
+
+<p>
+值              描述~
+0               禁用子列表项的折叠功能。
+1               启用子列表项的折叠功能。
+</p>
+
+<p>
+默认值: 0
+</p>
+
+<hr />
+<p>
+<strong>g:vimwiki_fold_trailing_empty_lines</strong>
+</p>
+
+<p>
+折叠，或不折叠那些已经折叠的行之间的空行。
+</p>
+
+<p>
+值              描述~
+0               仅折叠一个空行，其他的空行不折叠。
+1               折叠所有的空行。
+</p>
+
+<p>
+默认值: 0
+</p>
+
+<hr />
+<p>
+<strong>g:vimwiki_camel_case</strong>
+</p>
+
+<p>
+如果不希望 WikiWord 这样的驼峰式词组作为一个 Wiki 词条，可以更改这个设置。
+</p>
+
+<p>
+值              描述~
+0               不要将驼峰式词组作为 Wiki 词条。
+1               将驼峰式词组作为 Wiki 词条。
+</p>
+
+<p>
+默认值: 1
+</p>
+
+<hr />
+<p>
+<strong>g:vimwiki_list_ignore_newline</strong>
+</p>
+
+<p>
+这是与 HTML 相关的选项。
+在多行列表项里将换行符转为 &lt;BR /&gt;。
+</p>
+
+<p>
+值              描述~
+0               将换行符转为 &lt;BR /&gt;。
+1               忽略换行符。
+</p>
+
+<p>
+默认值: 1
+</p>
+
+<hr />
+<p>
+<strong>g:vimwiki_use_calendar</strong>
+</p>
+
+<p>
+针对日历里选中日期，新建或打开已存在的日记 wiki 文件。
+参考 |vimwiki-calendar|。
+</p>
+
+<p>
+值              描述~
+0               不要使用日历。
+1               使用日历。
+</p>
+
+<p>
+默认值: 1
+</p>
+
+
+<hr />
+<p>
+<strong>g:vimwiki_browsers</strong> <strong>VimwikiWeblinkHandler</strong>
+</p>
+
+<p>
+你可以使用 Web 浏览器打开一个外部链接。浏览器列表参考 |g:vimwiki_browsers|。
+</p>
+
+<p>
+针对 Win32：chrome, opera, firefox 和 explorer。
+针对其他系统：opera, firefox 和 konqueror。
+</p>
+
+<p>
+列表中第一个可用的浏览器会被用来打开链接。假如你有 opera 和 firefox，并希望
+用后者打开链接，只需要： &gt;
+ let g:vimwiki_browsers=['C:\Program Files\Firefox\firefox.exe']
+</p>
+
+<p>
+或者重定义 VimwikiWeblinkHandler 函数： &gt;
+  function! VimwikiWeblinkHandler(weblink)
+</p>
+<blockquote>
+let browser = 'C:\Program Files\Firefox\firefox.exe'
+execute '!start "'.browser.'" ' . a:weblink
+</blockquote>
+<p>
+  endfunction
+</p>
+
+
+<hr />
+<p>
+<strong>g:vimwiki_table_auto_fmt</strong>
+</p>
+
+<p>
+启用或禁用表格的自动格式化。
+</p>
+
+<p>
+值              描述~
+0               不要自动格式化表格。
+1               自动格式化表格。
+</p>
+
+<p>
+默认值: 1
+</p>
+
+
+<hr />
+<p>
+<strong>g:vimwiki_w32_dir_enc</strong>
+</p>
+
+<p>
+从当前编码(|encoding|)转换目录名称为 'g:vimwiki_w32_dir_enc' 编码。
+</p>
+
+<p>
+比如当前编码是 'enc=utf-8' 并且你设置 &gt;
+</p>
+<blockquote>
+let g:vimwiki_w32_dir_enc = 'cp1251'
+</blockquote>
+<p>
+&lt;
+则下面带换行符(&lt;CR&gt;)的链接： &gt;
+</p>
+<blockquote>
+<a href="привет/мир.html">привет/мир</a>
+</blockquote>
+<p>
+&gt;
+将从 utf-8 的 'привет' 转换为 cp1251 编码，并使用这个编码的名称创建目录。
+</p>
+
+<p>
+默认： ''
+</p>
+
+
+
+<hr />
+<p>
+<strong>g:vimwiki_CJK_length</strong>
+</p>
+
+<p>
+使用特殊的方法来计算双宽字符的长度（用来对齐表格单元）。
+</p>
+
+<p>
+值              描述~
+0               不使用。
+1               使用。
+</p>
+
+<p>
+默认： 0
+</p>
+
+<p>
+注意: Vim73 加入了 |strdisplaywidth| 特性，所以对于 Vim73 用户来说，该选项已过时。
+</p>
+
+
+<hr />
+<p>
+<strong>g:vimwiki_dir_link</strong>
+</p>
+
+<p>
+这个选项是关于目录链接的操作 -- <a href="directory/">directory/</a>, <a href="papers/">papers/</a> 等等。
+</p>
+
+<p>
+值              描述~
+''              使用标准的 netrw 插件打开 'directory/' 目录。
+'index'         打开 'directory/index.wiki'，如果没有就创建。
+'main'          打开 'directory/main.wiki'，如果没有就创建。
+等等。
+</p>
+
+<p>
+默认: '' (空字符)
+</p>
+
+
+<hr />
+<p>
+<strong>g:vimwiki_html_header_numbering</strong>
+</p>
+
+<p>
+如果希望 html 中的标题带上自动编号，设置这个选项。
+</p>
+
+<p>
+例如： &gt;
+</p>
+<blockquote>
+1 Header1
+1.1 Header2
+1.2 Header2
+1.2.1 Header3
+1.2.2 Header3
+1.3 Header2
+2 Header1
+3 Header1
+</blockquote>
+<p>
+等等。
+</p>
+
+<p>
+值              描述~
+0               关闭标题的编号。
+1               开启标题的编号。编号从一级标题开始。
+2               开启标题的编号。彪悍从二级标题开始。
+等等。
+</p>
+
+<p>
+例如当 g:vimwiki_html_header_numbering = 2: &gt;
+</p>
+<blockquote>
+Header1
+1 Header2
+2 Header2
+2.1 Header3
+2.1.1 Header4
+2.1.2 Header4
+2.2 Header3
+3 Header2
+4 Header2
+</blockquote>
+<p>
+等等。
+</p>
+
+<p>
+默认： 0
+</p>
+
+
+<hr />
+<p>
+<strong>g:vimwiki_html_header_numbering_sym</strong>
+</p>
+
+<p>
+|g:vimwiki_html_header_numbering| 的结束符号。
+</p>
+
+<p>
+值              描述~
+'.'             点号将被添加到标题编号的后面。
+')'             右括号将被添加到标题编号的后面。
+等等。
+</p>
+
+<p>
+设置有
+</p>
+<blockquote>
+let g:vimwiki_html_header_numbering = '.'
+</blockquote>
+<p>
+的标题将看起来如下： &gt;
+</p>
+<blockquote>
+1. Header1
+1.1. Header2
+1.2. Header2
+1.2.1. Header3
+1.2.2. Header3
+1.3. Header2
+2. Header1
+3. Header1
+</blockquote>
+
+
+<p>
+默认: '' (空字符)
+</p>
+
+<hr />
+<p>
+<strong>g:vimwiki_file_exts</strong>
+</p>
+
+<p>
+逗号分隔的文件后缀列表。
+</p>
+
+<p>
+考虑到以下链接： <a href="my_script.php][my script.html">my_script.php][my script</a>。
+如果 'php' 后缀在 g:vimwiki_file_exts 中，这个链接在生成 html 文件时，会被
+生成为 &lt;a href="my_script.php"&gt;&gt;my script&lt;/a&gt;。
+否则，将被生成为 &lt;a href="my_script.php.html"&gt;my script&lt;/a&gt; (注意 .html)
+</p>
+
+
+<p>
+默认值： 'pdf,txt,doc,rtf,xls,php,zip,rar,7z,html,gz'
+</p>
+
+
+<hr />
+<p>
+<strong>g:vimwiki_valid_html_tags</strong>
+</p>
+
+<p>
+可以在 vimwiki 里使用的 html 标签列表，以逗号分隔。
+</p>
+
+<p>
+默认值： 'b,i,s,u,sub,sup,kbd,br,hr'
+</p>
+
+
+<hr />
+<p>
+<strong>g:vimwiki_conceallevel</strong>
+</p>
+
+<p>
+在 Vim73 中 |conceallevel| 是针对局部的窗口选项设置，因此，当在新标签页或
+新窗口中打开 Vimwiki 缓冲区时，它会被设置为默认值。
+</p>
+
+<p>
+Vimwiki 在每次进入 vimwiki 缓冲区时都设置 |conceallevel| 为
+g:vimwiki_conceallevel
+</p>
+
+<p>
+默认值： 3
+</p>
+
+
+
+<p>
+==============================================================================
+12. 帮助                                                        <strong>vimwiki-help</strong>
+</p>
+
+<p>
+非常感谢你们帮助 vimwiki 变得更好！
+任何帮助，无论是修正错别字还是代码片段补丁 -- 欢迎一切。
+</p>
+
+<p>
+有问题都可以提交到 <a href="http://code.google.com/p/vimwiki/issues">http://code.google.com/p/vimwiki/issues</a> .
+</p>
+
+
+<p>
+==============================================================================
+13. 开发者                                               <strong>vimwiki-developers</strong>
+</p>
+
+<ul>
+<li>
+Maxim Kim &lt;habamax@gmail.com&gt;
+      创始人。
+
+<li>
+Mikhail Trishchenkov &lt;kriomant(at)gmail.com&gt;
+      于 2009 年 12 月加入。
+
+</ul>
+
+<p>
+Vimwiki 的网址: <a href="http://code.google.com/p/vimwiki/">http://code.google.com/p/vimwiki/</a>
+Vim 插件的网址: <a href="http://www.vim.org/scripts/script.php?script_id=2226">http://www.vim.org/scripts/script.php?script_id=2226</a>
+</p>
+
+<p>
+... 后记
+</p>
+
+<p>
+感谢所有在 www.vim.org 上给 vimwiki 投票的人。我本可以用业余时间和美女跳舞，
+不过你的投票也是一种很好的替代形式。 ;)
+</p>
+
+<p>
+此致，
+Maxim Kim.
+</p>
+
+
+<p>
+==============================================================================
+14. Changelog                                              <strong>vimwiki-changelog</strong>
+</p>
+
+<p>
+1.1.1~
+</p>
+<ul>
+<li>
+FIX: Issue 122: Dot character in vimwiki's directory path isn't escaped.
+
+<li>
+FIX: Issue 123: Where is Vimwiki2HTML and other commands? Sometimes
+      filetype is not set up to vimwiki.
+
+<li>
+FIX: Issue 124: Highlight group not found: Normal
+
+</ul>
+
+<p>
+1.1~
+</p>
+<ul>
+<li>
+NEW: Issue 57: Make it possible to have pre block inside list item.
+
+<li>
+NEW: Issue 82: Add quick goto command. See |:VimwikiGoto|.
+
+<li>
+NEW: Issue 83: Quick switch in diary. See |:VimwikiDiaryNextDay| and
+      |:VimwikiDiaryPrevDay| commands.
+
+<li>
+FIX: Issue 84: Vimwiki rename removed the WikiWord display name.
+
+<li>
+FIX: Issue 85: Errors if you have '~' subdirectory in a wiki directory.
+
+<li>
+FIX: Issue 86: Existed links '<a href="WikiLink1.html">Alias1</a> | <a href="WikiLink2.html">WikiLink2</a>' are
+      highlighted as a single link.
+
+<li>
+FIX: Issue 88: Underline text. See |g:vimwiki_valid_html_tags|.
+
+<li>
+FIX: Issue 92: Wikies in a subdir could be renamed to an empty file.
+
+<li>
+FIX: Issue 93: Use alias name in html title. See |vimwiki-title|.
+
+<li>
+FIX: Issue 94: Relative links to PHP files are broken. See
+      |g:vimwiki_file_exts| for details.
+
+<li>
+FIX: Issue 96: Closing bracket at the end of weblink shouldn't be a part
+      of that link.
+
+<li>
+FIX: Issue 97: Error opening weblink in a browser if it has # inside.
+
+<li>
+FIX: Issue 99: Vim is not responding while opening arbitrary wiki file.
+
+<li>
+FIX: Issue 100: Additional content on diary index page could be
+      corrupted.
+
+<li>
+NEW: Issue 101: Customized HTML tags. See |g:vimwiki_valid_html_tags|
+
+<li>
+NEW: Issue 102: Conceal feature usage. See |g:vimwiki_conceallevel|.
+
+<li>
+FIX: Issue 103: Always highlight links to non-wiki files as existed.
+
+<li>
+FIX: Issue 104: vimwiki#nested_syntax needs 'keepend' to avoid contained
+      language syntax eat needed '}}}'.
+
+<li>
+FIX: Issue 105: &lt;i_CR&gt; on a todo list item with [ ] doesn't create new
+      todo list item.
+
+<li>
+FIX: Issue 106: With MediaWiki syntax &lt;C-Space&gt; on a child todo list
+      item produce errors.
+
+<li>
+FIX: Issue 107: With MediaWiki syntax &lt;C-Space&gt; on a list item creates
+      todo list item without space between * and [ ].
+
+<li>
+FIX: Issue 110: Syntax highlighting doesn't work for indented codeblock.
+
+<li>
+FIX: Issue 115: Nested Perl syntax highlighting differs from regular
+      one.
+
+<li>
+MISC: Many vimwiki commands were renamed from Vimwiki.*Word to
+      Vimwiki.*Link. VimwikiGoHome is renamed to VimwikiIndex,
+      VimwikiTabGoHome to VimwikiTabIndex.
+
+<li>
+MISC: vimwiki-option-gohome is removed.
+
+</ul>
+
+<p>
+1.0~
+</p>
+<ul>
+<li>
+NEW: Issue 41: Table cell and column text objects. See
+      |vimwiki-text-objects|.
+
+<li>
+NEW: Issue 42: Commands to move table columns left and right. See
+      |:VimwikiTableMoveColumnLeft| and |:VimwikiTableMoveColumnRight|.
+
+<li>
+NEW: Issue 44: &lt;S-Tab&gt; should move cursor to the previous table cell.
+
+<li>
+NEW: Issue 45: It should be possible to indent tables. Indented tables
+      are centered in html.
+
+<li>
+NEW: Issue 46: Do not htmlize some wiki pages (blacklist). New
+      placeholder is added: %nohtml. See |vimwiki-nohtml|.
+
+<li>
+FIX: Issue 47: Lists aren't HTMLized properly.
+
+<li>
+FIX: Issue 48: With autochdir it is impossible to have path_html such as
+      'd:\vimwiki\html\'
+
+<li>
+FIX: Issue 49: Table is not HTMLized properly at the end of wiki page.
+
+<li>
+FIX: Issue 50: Inline formatting is not performed in table cells.
+
+<li>
+FIX: Issue 51: Cannot insert '-' (minus) into table cells of the first
+      column.
+
+<li>
+FIX: Issue 52: Table cell width is incorrect when double wide characters
+      are used (ie. Chinese). Check |g:vimwiki_CJK_length|.
+
+<li>
+NEW: Issue 53: Wiki markup can not nested. (Use links and inline markup
+      in Headers).
+
+<li>
+NEW: Issue 54: Highlight for placeholders.
+
+<li>
+NEW: Issue 56: Directory indexes. See |g:vimwiki_dir_link| option and
+      |:VimwikiGenerateLinks| command.
+
+<li>
+NEW: Issue 58: Html new lines with <br />. Could be inserted with &lt;S-CR>
+      in insert mode.
+
+<li>
+FIX: Issue 59: List item's text can't be started from *.
+
+<li>
+NEW: Issue 60: Links inside completed gtd-items.
+
+<li>
+NEW: Issue 61: Headers numbering. See |g:vimwiki_html_header_numbering|
+      and |g:vimwiki_html_header_numbering_sym| options.
+
+<li>
+FIX: Issue 63: Table cannot have leading empty cells in html.
+
+<li>
+FIX: Issue 65: Table separator is not htmlized right if on top of the
+      table.
+
+<li>
+FIX: Issue 66: Table empty cells are very small in html.
+
+<li>
+FIX: Issue 67: Wrong html conversion of multilined list item with bold
+      text on the start of next line.
+
+<li>
+FIX: Issue 68: auto-indent problem with langmap.
+
+<li>
+FIX: Issue 73: Link navigation by Tab. "Escaped" wiki-word should be
+      skipped for navigation with &lt;tab&gt;.
+
+<li>
+FIX: Issue 75: <code>code</code> syntax doesn't display correctly in toc.
+
+<li>
+FIX: Issue 77: Diary index only showing link to today's diary entry
+      file for extensions other than '.wiki'.
+
+<li>
+FIX: Issue 79: Further calendar.vim integration -- add sign to calendar
+      date if it has corresponding diary page.
+
+<li>
+FIX: Issue 80: Debian Lenny GUI Vim 7.2 has problems with toggling inner
+      todo list items.
+
+<li>
+FIX: Issue 81: Don't convert WikiWord as a link in html when
+      <code>let g:vimwiki_camel_case = 0</code>
+
+</ul>
+
+<p>
+0.9.9~
+</p>
+<ul>
+<li>
+NEW: Diary. Help in making daily notes. See |vimwiki-diary|. Now you can
+      really easy add information into vimwiki that should be sorted out
+      later.
+
+<li>
+NEW: Tables are redesigned. Syntax is changed. Now they are
+      auto-formattable. You can navigate them with &lt;tab&gt; and &lt;cr&gt; in insert
+      mode. See |vimwiki-syntax-tables| and |vimwiki-tables| for more details.
+
+<li>
+NEW: Keyword <span class="todo">STARTED:</span> is added.
+
+<li>
+NEW: Words <span class="todo">TODO:</span>, <span class="todo">DONE:</span>, <span class="todo">STARTED:</span>, <span class="todo">XXX:</span>, <span class="todo">FIXME:</span>, <span class="todo">FIXED:</span> are highlighed
+      inside headers.
+
+<li>
+FIX: Export to html external links with '<a href="file://'">file://'</a> protocol. Ex:
+      [<a href="file:///home/user1/book.pdf">file:///home/user1/book.pdf</a> my book].
+
+<li>
+FIX: Menu is corrupted if wiki's path contains spaces.
+
+<li>
+FIX: Settings |wrap| and |linebreak| are removed from ftplugin. Add them
+      into your personal settings file <code>.vim/after/ftplugin/vimwiki.vim</code> if
+      needed.
+
+<li>
+NEW: Headers are highlighted in different colors by default.
+      See |g:vimwiki_hl_headers| to turn it off.
+
+<li>
+FIX: Issue 40: Links with russian subdirs don't work.
+
+<li>
+NEW: It is now possible to generate HTML files automatically on page
+      save. See |vimwiki-option-auto_export|.
+
+</ul>
+
+
+<p>
+0.9.8~
+</p>
+<ul>
+<li>
+NEW: Rename |g:vimwiki_fold_empty_lines| to
+      |g:vimwiki_fold_trailing_empty_lines|.
+
+<li>
+NEW: One can use '-' along with '*' to start unordered list item.
+
+<li>
+NEW: List items could be started from the first column.
+      As a result some limitations appeared:
+
+<ul>
+<li>
+a space after *, - or # for a list item is mandatory.
+
+<li>
+|g:vimwiki_fold_trailing_empty_lines| if set to 0 folds one trailing
+          empty line.
+
+</ul>
+<li>
+NEW: Folding is off by default. Use |g:vimwiki_folding| to enable it.
+
+<li>
+NEW: Speed up vimwiki's folding a bit. Should lag a bit less in a long
+      todo lists.
+
+<li>
+NEW: Centered headers. Start header with at least one space to make it
+      html centered.
+
+<li>
+NEW: Change in default css: header's colors.
+
+<li>
+NEW: Vimwiki is aware of |GetLatestVimScripts| now.
+
+<li>
+FIX: Use &lt;del&gt; tag instead of custom &lt;span class="strike"&gt; in html.
+
+<li>
+FIX: There are no text styling in htmlized quoted text.
+
+<li>
+FIX: set default value of g:vimwiki_fold_lists to 0 as written in this
+      help.
+
+<li>
+FIX: Issue 33: Folded list items have wrong indentation when 'tabs' are
+      used.
+
+<li>
+FIX: Issue 34: vimwiki#subdir got wrong dir when VimwikiGet('path') is a
+      symbolic link. Thanks lilydjwg for the patch.
+
+<li>
+FIX: Issue 28: todo-list auto-indent enhancement. New item should always
+      be unchecked.
+
+<li>
+Issue 36: Change the name of the Search command to VimwikiSearch as it
+      conflicts with MultipleSearch. Alias :VWS is also available.
+
+<li>
+NEW: You can generate 'Table of contents' of your wiki page. See
+      |vimwiki-toc| for details.
+
+</ul>
+
+<p>
+0.9.701~
+</p>
+<ul>
+<li>
+FIX: Issue 30: Highlighting doesn't work for checked list item.
+
+</ul>
+
+<p>
+0.9.7~
+</p>
+<ul>
+<li>
+NEW: Default checkbox symbols are changed to [ ], [.], [o], [O], [X].
+      You can change them using |g:vimwiki_listsyms| variable.
+
+<li>
+NEW: Color group names are renamed from wikiBold, wikiItalic, etc to
+      VimwikiBold, VimwikiItalic, etc.
+
+<li>
+NEW: Open external links in a browser. There are default browsers
+      defined in |g:vimwiki_browsers| list. You can also redefine
+      |VimwikiWeblinkHandler| function to open weblinks in other programs.
+
+<li>
+NEW: Issue 25: Toggle the states of multiple TODO list items at a time
+      (in VISUAL and in VISUAL LINE modes)
+
+<li>
+NEW: Issue 26: Highlight code snippets in vimwiki's pre. See
+      |vimwiki-option-nested_syntaxes|. Thanks kriomant.
+
+<li>
+NEW: Issue 27: Automatic garbage deletion from html directory.
+
+<li>
+NEW: Save all open vimwiki buffers before export to html.
+
+<li>
+NEW: Issue 29: Custom :Search command.
+
+<li>
+NEW: Header text objects are now expandable in VISUAL mode. Tap 'vah' to
+      select a header. Tap again 'ah' to expand selection further. Thanks Andy
+      Wokula.
+
+<li>
+FIX: Folding settings are reset to vim defaults in a new tab (think of
+      \wt) so you cannot hide things in folds.
+
+<li>
+FIX: https links in form of [<a href="https://hello.world.com]">https://hello.world.com]</a> are not exported
+      into html. Thanks Saurabh Sarpal for the patch.
+
+</ul>
+
+<p>
+0.9.6~
+</p>
+<ul>
+<li>
+NEW: You can have multiline list items. See |vimwiki-syntax-lists|.
+
+<li>
+NEW: You can ignore newlines in multiline list items when do export to
+      html. See |g:vimwiki_list_ignore_newline| option.
+
+<li>
+NEW: Different checkbox symbols [.], [:], [o] are added. See
+      |vimwiki-todo-lists|.
+
+<li>
+NEW: Now there is no longer syntax of preformatted text that is started
+      by a whitespace.
+
+<li>
+NEW: Blockquotes. See |vimwiki-syntax-blockquote|.
+
+<li>
+NEW: Per wiki folding option (vimwiki-option-folding) is removed. Global
+      |g:vimwiki_folding| and |g:vimwiki_fold_lists| are added.
+
+<li>
+NEW: Due to being quite slow folding of list items is off by default.
+      Use |g:vimwiki_fold_lists| to turn it on.
+
+<li>
+NEW: If you want replace some symbols in a wikifilename use
+      |g:vimwiki_badsyms| option (Andreas Baldeau).
+
+<li>
+FIX: Command |:VimwikiToggleListItem| doesn't work for one of the two
+      wikies opened at the same time with different syntaxes.
+
+<li>
+FIX: Command |:VimwikiToggleListItem| do not switch parent checkboxes if
+      there are non-checkbox list items available.
+
+<li>
+FIX: Issue 24: Link error in html when write <a href="one.two.three.html">one.two.three</a>.
+
+<li>
+FIX: Rename WikiWord to something with a colon (:) does nasty things.
+
+<li>
+FIX: Command |:VimwikiToggleListItem| do not switch right if there are
+      list items without checkboxes in the list.
+
+</ul>
+
+<p>
+0.9.5~
+</p>
+<ul>
+<li>
+NEW: Added |g:vimwiki_global_ext| to control creation of temporary
+      wikies in dirs that are not listed in |g:vimwiki_list|.
+
+<li>
+NEW: Added |g:vimwiki_hl_headers| to highlight headers with different
+      predefined colors.
+
+<li>
+NEW: Checked [X] items are not highlighted with Comment syntax group by
+      default. Use |g:vimwiki_hl_cb_checked| to turn it on.
+
+<li>
+NEW: Added new syntax for links: <a href="link address][link description.html">link address][link description</a>.
+
+<li>
+NEW: Added &lt;C-@&gt; allias of &lt;C-Space&gt; mapping for *nix systems.
+
+<li>
+NEW: Added |g:vimwiki_camel_case|. Set it to 0 if you do not want
+      CamelCased WikiWords to be linkified.
+
+<li>
+FIX: Links with g:vimwiki_stripsym (default '_') <a href="My_Link.html">Text</a> are
+      not highlighted when created.
+
+<li>
+FIX: indent/vimwiki.vim is obsolete. If you upgrade from previous
+      versions remove it. It causes wrong list indentation if noexpandtab is
+      set.
+
+<li>
+FIX: If tabs and spaces are used to indent list items html export gives
+      error. Thanks Klaus Ethgen for report.
+
+<li>
+FIX: Some html export fixes.
+
+</ul>
+
+<p>
+0.9.4~
+</p>
+<ul>
+<li>
+NEW: Links with directories: <a href="dir1/dir2/Link.html">Text</a>. Thanks Jie Wu.
+
+<li>
+NEW: Added %root_path% template variable to get relative root dir of
+      path_html. See |vimwiki-option-html_header|.
+
+<li>
+FIX: Indent is incorrect for vim without "float" compile option. Thanks
+      Julian Kooij.
+
+<li>
+FIX: Convert to html doesn't work right with links like <a href="foo::bar.html">foo::bar</a>.
+
+<li>
+FIX: Rename wikiword doesn't work right when rename WikiWord to
+      <a href="WikiWord blablabla.html">WikiWord blablabla</a>.
+
+<li>
+FIX: Renaming of links with description doesn't work.
+
+<li>
+FIX: Weblinks with commas are not highlighted.
+
+<li>
+MISC: Some changes in default css file.
+
+</ul>
+
+<p>
+0.9.3~
+</p>
+<ul>
+<li>
+NEW: g:vimwiki_menu option is a string which is menu path. So one can
+      use let g:vimwiki_menu = 'Plugin.Vimwiki' to set the menu to the right
+      place.
+
+<li>
+NEW: g:vimwiki_fold_empty_lines -- don't or do fold in empty lines
+      between headers. See |g:vimwiki_fold_empty_lines|
+
+<li>
+FIX: Encoding error when running vimwiki in Windows XP Japanese.
+      Thanks KarasAya.
+
+</ul>
+
+<p>
+0.9.2c~
+</p>
+<ul>
+<li>
+FIX: Regression: Export HTML link error with <a href="Link.html">Text</a>.
+
+</ul>
+
+<p>
+0.9.2b~
+</p>
+<ul>
+<li>
+FIX: Installation on Linux doesn't work. (Dos line endings in Vimball
+      archive file).
+
+<li>
+FIX: Clear out FlexWiki ftplugin's setup. Now you don't have to hack
+      filetype.vim to get rid of unexpected ':setlocal bomb' from FlexWiki's
+      ftplugin.
+
+<li>
+FIX: When write done: it will show another done: in html file.
+
+</ul>
+
+<p>
+0.9.2a~
+</p>
+<ul>
+<li>
+FIX: Installation on Linux doesn't work. (Dos line endings in
+      autoload/vimwiki_lst.vim and indent/vimwiki.vim).
+
+</ul>
+
+<p>
+0.9.2~
+</p>
+<ul>
+<li>
+NEW: Option 'folding' added to turn folding on/off.
+
+<li>
+NEW: Header text object. See |vimwiki-text-objects|.
+
+<li>
+NEW: Add/remove Header levels with '=' and '-'. See |vimwiki_=|.
+
+<li>
+NEW: Vimwiki GUI menu to select available wikies. See |g:vimwiki_menu|.
+
+<li>
+NEW: You can specify the name of your css file now. See
+      |vimwiki-option-css_name|
+
+<li>
+NEW: You can add styles to image links, see |vimwiki-syntax-links|.
+
+<li>
+FIX: History doesn't work after |VimwikiRenameWord|.
+
+<li>
+FIX: Some of wikipedia links are not correctly highlighted. Links with
+      parentheses.
+
+<li>
+MISC: Renamed vimwiki_gtd to vimwiki_lst.
+
+</ul>
+
+<p>
+0.9.1~
+</p>
+<ul>
+<li>
+NEW: HTML Table cell text alignment, see |vimwiki-syntax-tables|
+
+<li>
+NEW: Wikipage history simplified. Each vimwiki buffer now holds
+      b:vimwiki_prev_word which is list of [PrevWord, getpos()].
+
+<li>
+NEW: If highlight for groups wikiHeader1..wikiHeader6 exist (defined in
+      a colorscheme) -- use it. Otherwise use Title highlight for all Headers.
+
+<li>
+FIX: Warn only once if 'html_header' or 'html_footer' does not exist.
+
+<li>
+FIX: Wrong folding for the text after the last nested list item.
+
+<li>
+FIX: Bold and Italic aren't highlighted in tables without spaces
+      between || and * or _. ||<strong>bold</strong>||<em>asdf</em> || (Thanks Brett Stahlman)
+
+</ul>
+
+<p>
+0.9.0~
+</p>
+<ul>
+<li>
+NEW: You can add classes to 'pre' tag -- |vimwiki-syntax-preformatted|.
+      This might be useful for coloring some programming code with external js
+      tools like google syntax highlighter.
+
+<li>
+NEW: !WikiPage is not highlighted. It is just a plain word WikiPage in
+      HTML, without exclamation mark
+
+<li>
+NEW: Definition lists, see |vimwiki-syntax-lists|.
+
+<li>
+NEW: New implementation of |:VimwikiRenameWord|. CAUTION: It was tested
+      on 2 computers only, backup your wiki before use it. Email me if it
+      doesn't work for you.
+
+<li>
+FIX: Less than 3 symbols are not highlighted in Bold and Italic.
+
+<li>
+FIX: Added vimwiki autocmd group to avoid clashes with user defined
+      autocmds.
+
+<li>
+FIX: Pressing ESC while |:VimwikiUISelect| opens current wiki index
+      file.  Should cancel wiki selection.
+
+</ul>
+
+<p>
+0.8.3~
+</p>
+<ul>
+<li>
+NEW: &lt;C-Space&gt; on a list item creates checkbox.
+
+<li>
+FIX: With * in the first column, &lt;CR&gt; shouldn't insert more * (default
+      syntax).
+
+<li>
+FIX: With MediaWiki's ** [ ], &lt;CR&gt; should insert it on the next line.
+
+<li>
+FIX: HTML export should use 'fileencoding' instead of 'encoding'.
+
+<li>
+FIX: Code cleanup.
+
+</ul>
+
+<p>
+0.8.2~
+</p>
+<ul>
+<li>
+DEL: Removed google syntax file.
+
+<li>
+NEW: Default vimwiki syntax is a subset of google's one. Header's has
+      been changed from !Header to =Header=. It is easier to maintain only 2
+      syntaxes. See |vimwiki-syntax-headers|.
+
+<li>
+NEW: Multiline paragraphs -- less longlines.
+
+<li>
+NEW: Comments. See |vimwiki-syntax-comments|.
+
+<li>
+DEL: Removed setlocal textwidth = 0 from ftplugin.
+
+<li>
+FIX: New regexps for bold, italic, bolditalic.
+
+<li>
+FIX: The last item in List sometimes fold-in incorrectly.
+
+<li>
+FIX: Minor tweaks on default css.
+
+</ul>
+
+<p>
+0.8.1~
+</p>
+<ul>
+<li>
+NEW: Vimwiki's foldmethod changed from syntax to expr. Foldtext is
+      changed to be nicer with folded list items.
+
+<li>
+NEW: Fold/outline list items.
+
+<li>
+NEW: It is possible now to edit wiki files in arbitrary directories
+      which is not in g:vimwiki_list's paths. New WikiWords are created in the
+      path of the current WikiWord.
+
+<li>
+NEW: User can remap Vimwiki's built in mappings.
+
+<li>
+NEW: Added |g:vimwiki_use_mouse|. It is off by default.
+
+<li>
+FIX: Removed &lt;C-h&gt; mapping.
+
+</ul>
+
+<p>
+0.8.0~
+</p>
+<ul>
+<li>
+NEW: Multiple wikies support. A lot of options have been changed, see
+      |vimwiki-options|
+
+<li>
+NEW: Auto create directories.
+
+<li>
+NEW: Checked list item highlighted as comment.
+
+<li>
+FIX: Multiple 'set ft=vimwiki' for each buffer disabled. Vimwiki should
+      load its buffers a bit faster now.
+
+</ul>
+
+<p>
+0.7.1~
+</p>
+<ul>
+<li>
+NEW: &lt;Plug&gt;VimwikiToggleListItem added to be able to remap &lt;C-Space&gt; to
+      anything user prefers more.
+
+<li>
+FIX: Toggleable list items do not work with MediaWiki markup.
+
+<li>
+FIX: Changing g:vimwiki_home_html to path with ~ while vimwiki is
+      loaded gives errors for HTML export.
+
+<li>
+DEL: Command :VimwikiExploreHome.
+
+</ul>
+
+<p>
+0.7.0~
+</p>
+<ul>
+<li>
+NEW: GTD stuff -- toggleable list items. See |vimwiki-todo-lists|.
+
+<li>
+FIX: Headers do not fold inner headers. (Thanks Brett Stahlman)
+
+<li>
+FIX: Remove last blank lines from preformatted text at the end of file.
+
+<li>
+DEL: Removed g:vimwiki_smartCR option.
+
+</ul>
+
+<p>
+0.6.2~
+</p>
+<ul>
+<li>
+NEW: <a href="link.html">description</a> is available now.
+
+<li>
+FIX: Barebone links (ie: <a href="http://bla-bla-bla.org/h.pl?id=98)">http://bla-bla-bla.org/h.pl?id=98)</a> get extra
+      escaping of ? and friends so they become invalid in HTML.
+
+<li>
+FIX: In linux going to <a href="wiki with whitespaces.html">wiki with whitespaces</a> and then pressing BS
+      to go back to prev wikipage produce error. (Thanks Brendon Bensel for
+      the fix)
+
+<li>
+FIX: Remove setlocal encoding and fileformat from vimwiki ftplugin.
+
+<li>
+FIX: Some tweaks on default style.css
+
+</ul>
+
+<p>
+0.6.1~
+</p>
+<ul>
+<li>
+FIX: [blablabla bla] shouldn't be converted to a link.
+
+<li>
+FIX: Remove extra annoing empty strings from PRE tag made from
+      whitespaces in HTML export.
+
+<li>
+FIX: Moved functions related to HTML converting to new autoload module
+      to increase a bit vimwiki startup time.
+
+</ul>
+
+<p>
+0.6~
+</p>
+<ul>
+<li>
+NEW: Header and footer templates. See|g:vimwiki_html_header| and
+      |g:vimwiki_html_footer|.
+
+<li>
+FIX: |:Vimwiki2HTML| does not recognize ~ as part of a valid path.
+
+</ul>
+
+<p>
+0.5.3~
+</p>
+<ul>
+<li>
+FIX: Fixed |:VimwikiRenameWord|. Error when g:vimwiki_home had
+      whitespaces in path.
+
+<li>
+FIX: |:VimwikiSplitWord| and |:VimwikiVSplitWord| didn't work.
+
+</ul>
+
+<p>
+0.5.2~
+</p>
+<ul>
+<li>
+NEW: Added |:VimwikiGoHome|, |:VimwikiTabGoHome| and
+      |:VimwikiExploreHome| commands.
+
+<li>
+NEW: Added &lt;Leader&gt;wt mapping to open vimwiki index file in a new tab.
+
+<li>
+NEW: Added g:vimwiki_gohome option that controls how|:VimwikiGoHome|
+      works when current buffer is changed. (Thanks Timur Zaripov)
+
+<li>
+FIX: Fixed |:VimwikiRenameWord|. Very bad behaviour when autochdir
+      isn't set up.
+
+<li>
+FIX: Fixed commands :Wiki2HTML and :WikiAll2HTML to be available only
+      for vimwiki buffers.
+
+<li>
+FIX: Renamed :Wiki2HTML and :WikiAll2HTML to |:Vimwiki2HTML| and
+      |:VimwikiAll2HTML| commands.
+
+<li>
+FIX: Help file corrections.
+
+</ul>
+
+<p>
+0.5.1~
+</p>
+<ul>
+<li>
+NEW: This help is created.
+
+<li>
+NEW: Now you can fold headers.
+
+<li>
+NEW: &lt;Plug&gt;VimwikiGoHome and &lt;Plug&gt;VimwikiExploreHome were added.
+
+<li>
+FIX: Bug with {{{HelloWikiWord}}} export to HTML is fixed.
+
+<li>
+DEL: Sync option removed from: Syntax highlighting for preformatted
+      text {{{ }}}.
+
+</ul>
+
+<p>
+0.5~
+</p>
+<ul>
+<li>
+NEW: vimwiki default markup to HTML conversion improved.
+
+<li>
+NEW: Added basic GoogleWiki and MediaWiki markup languages.
+
+<li>
+NEW: Chinese <a href="complex wiki words.html">complex wiki words</a>.
+
+</ul>
+
+<p>
+0.4~
+</p>
+<ul>
+<li>
+NEW: vimwiki=&gt;HTML converter in plain Vim language.
+
+<li>
+NEW: Plugin autoload.
+
+</ul>
+
+<p>
+0.3.4~
+</p>
+<ul>
+<li>
+FIX: Backup files (.wiki~) caused a bunch of errors while opening wiki
+      files.
+
+</ul>
+
+<p>
+0.3.3~
+</p>
+<ul>
+<li>
+FIX: <a href="wiki word with dots at the end....html">wiki word with dots at the end...</a> didn't work.
+
+<li>
+NEW: Added error handling for delete wiki word function.
+
+<li>
+NEW: Added keybindings o and O for list items when g:vimwiki_smartCR=1.
+
+<li>
+NEW: Added keybinding &lt;Leader&gt;wh to visit wiki home directory.
+
+</ul>
+
+<p>
+0.3.2~
+</p>
+<ul>
+<li>
+FIX: Renaming -- error if complex wiki word contains %.
+
+<li>
+FIX: Syntax highlighting for preformatted text {{{ }}}. Sync option
+      added.
+
+<li>
+FIX: smartCR bug fix.
+
+</ul>
+
+<p>
+0.3.1~
+</p>
+<ul>
+<li>
+FIX: Renaming -- <a href="hello world?.html">hello world?</a> to <a href="hello? world.html">hello? world</a> links are not
+      updated.
+
+<li>
+FIX: Buffers menu is a bit awkward after renaming.
+
+<li>
+NEW: Use mouse to follow links. Left double-click to follow WikiWord,
+      Rightclick then Leftclick to go back.
+
+</ul>
+
+<p>
+0.3~
+</p>
+<ul>
+<li>
+NEW: Highlight non-existent WikiWords.
+
+<li>
+NEW: Delete current WikiWord (&lt;Leader&gt;wd).
+
+<li>
+NEW: g:vimwiki_smartCR=2 =&gt; use Vim comments (see :h comments :h
+      formatoptions) feature to deal with list items. (thx -- Dmitry
+      Alexandrov)
+
+<li>
+NEW: Highlight <span class="todo">TODO:</span>, <span class="todo">DONE:</span>, <span class="todo">FIXED:</span>, <span class="todo">FIXME:</span>.
+
+<li>
+NEW: Rename current WikiWord -- be careful on Windows you cannot rename
+      wikiword to WikiWord. After renaming update all links to that renamed
+      WikiWord.
+
+<li>
+FIX: Bug -- do not duplicate WikiWords in wiki history.
+
+<li>
+FIX: After renaming <a href="wiki word.html">wiki word</a> twice buffers are not deleted.
+
+<li>
+FIX: Renaming from <a href="wiki word.html">wiki word</a> to WikiWord result is <a href="WikiWord.html">WikiWord</a>
+
+<li>
+FIX: More than one complex words on one line is bugging each other when
+      try go to one of them. <a href="bla bla bla.html">bla bla bla</a> <a href="dodo dodo dodo.html">dodo dodo dodo</a> becomes bla
+      bla bla]] [[dodo dodo dodo.
+
+</ul>
+
+
+<p>
+0.2.2~
+</p>
+<ul>
+<li>
+NEW: Added keybinding &lt;S-CR&gt; -- split WikiWord
+
+<li>
+NEW: Added keybinding &lt;C-CR&gt; -- vertical split WikiWord
+
+</ul>
+
+<p>
+0.2.1~
+</p>
+<ul>
+<li>
+NEW: Install on Linux now works.
+
+</ul>
+
+<p>
+0.2~
+</p>
+<ul>
+<li>
+NEW: Added part of Google's Wiki syntax.
+
+<li>
+NEW: Added auto insert # with ENTER.
+
+<li>
+NEW: On/Off auto insert bullet with ENTER.
+
+<li>
+NEW: Strip <a href="complex wiki name.html">complex wiki name</a> from symbols that cannot be used in
+      file names.
+
+<li>
+NEW: Links to non-wiki files. Non wiki files are files with extensions
+      ie <a href="hello world.txt.html">hello world.txt</a> or <a href="my homesite.html.html">my homesite.html</a>
+
+</ul>
+
+<p>
+0.1~
+</p>
+<ul>
+<li>
+First public version.
+
+</ul>
+
+<p>
+==============================================================================
+15. License                                                  <strong>vimwiki-license</strong>
+</p>
+
+<p>
+The MIT Licence
+<a href="http://www.opensource.org/licenses/mit-license.php">http://www.opensource.org/licenses/mit-license.php</a>
+</p>
+
+<p>
+Copyright (c) 2008-2010 Maxim Kim
+</p>
+
+<p>
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+</p>
+
+<p>
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+</p>
+
+<p>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+</p>
+
+
+
+<p>
+ vim:tw=78:ts=8:ft=help
+</p>
+
+</body>
+</html>

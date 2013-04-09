@@ -1,0 +1,12 @@
+= Todo =
+
+- [X] NT Squid/DNS/iptables
+- [X] 电面
+
+= Detail =
+
+- squid
+    - https proxy: www.rahulpahade.com/content/squid-transparent-proxy-over-ssl-https
+    - iptables: http://gcp1126.blog.51cto.com/541139/512835
+    - bind
+    - dns 转发器
