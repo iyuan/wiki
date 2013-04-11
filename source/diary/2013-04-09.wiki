@@ -1,0 +1,74 @@
+== rop ==
+=== get_list ===
+None
+=== get_detail ===
+None
+=== get_release_detail ===
+None
+=== post_release ===
+
+| doc                                         | now  | need     |
+|---------------------------------------------|------|----------|
+| TargetPool,SubmitUser,CoachOwner,AutoUpload | 写死 |          |
+| Apps                                        | 传递 | 是否重复 |
+
+== cbuilder ==
+
+| ROP                           | cbuild                        |
+|-------------------------------|-------------------------------|
+| AppID                         | app_id                        |
+| AppType                       | app_type                      |
+| -                             | requester(写死)               |
+| -                             | requester_email(写死)         |
+| Mainsource.UserName           | mainsource.username           |
+| Mainsource.SourceUrl          | mainsource.sourceurl          |
+| Mainsource.Exclude_Parent_Dir | mainsource.exclude_parent_dir |
+| Mainsource.SourceType         | mainsource.source_type        |
+| Mainsource.Path               | mainsource.path               |
+| Mainsource.Password           | mainsource.password           |
+| Sources.UserName              | sources.username              |
+| Sources.SourceUrl             | sources.source_url            |
+| Sources.Exclude_Parent_Dir    | sources.exclude_parent_dir    |
+| Sources.SourceType            | sources.source_type           |
+| Sources.Path                  | sources.path                  |
+| Sources.Password              | sources.password              |
+
+== FAT/UAT ==
+
+- not RestfulApi
+- create: Execute, res: ExecuteResult(string)
+
+    | ROP         | FAT/UAT     |
+    |-------------|-------------|
+    | TargetPool  | env(写死)   |
+    | ProductLine | productLine |
+
+- query: queryAutoTestJob, res: queryAutoTestJobResult(json)
+    
+    | key               | value                            |
+    |-------------------|----------------------------------|
+    | summary           | string                           |
+    | status            | string(successed,failed,running) |
+    | jobid             | string                           |
+    | detail_report_url | string                           |
+    
+
+== LPT ==
+
+- not RestfulApi
+- create: CreatePFJob, res: CreatePFJobResult(int)
+
+    | ROP         | LPT          |
+    |-------------|--------------|
+    | TargetPool  | target(写死) |
+    | ProductLine | ProductKey   |
+    | -           | coach_detail |
+    
+- query: GetJobStatus, res: GetJobStatusResult(xml)
+    
+    | key            | value                                            |
+    |----------------|--------------------------------------------------|
+    | job_status     | string(0:running,1:wait,2:finished,3:create new) |
+    | job_resultCode | string(-1:no result,0:pass,1:fail)               |
+    | StartTime      | string                                           |
+    | Summary        | string                                           |

@@ -5,12 +5,19 @@
 = TODO =
 
 - [ ] dns/ad 权限
-- [ ] Pipeline
-    - [ ] 整理/统一api参数
-- [ ] interests
+- [o] Pipeline
+    - [X] 整理/统一api参数
+    - [X] go 测试
+    - [ ] 脚本整合
+    - [ ] 界面剥离
+        - [ ] 页面平移
+        - [ ] 复用性
+- [o] interests
     - [ ] dns执行顺序/转向器顺序
+    - [ ] python算法实现
+    - [X] vimwiki -- confluence wiki (目前不行)
+    - [X] vim上下标#help™: digraph
 
 
 = Detail =
-
 
