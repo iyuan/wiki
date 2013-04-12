@@ -1,22 +1,25 @@
 = Hi,Wiki! =
 
 - [[Tutoral]]
+- [[diary/2013-04-12|移交]]
 
 = TODO =
 
 - [ ] dns/ad 权限
-- [o] Pipeline
+- [X] ~~Pipeline~~
     - [X] 整理/统一api参数
     - [X] go 测试
-    - [ ] 脚本整合
-    - [ ] 界面剥离
-        - [ ] 页面平移
-        - [ ] 复用性
+    - [X] 脚本整合
+    - [X] 界面剥离
+        - [X] 页面平移
+            - [X] stop action after get build_no
+        - [X] 复用性
 - [o] interests
     - [ ] dns执行顺序/转向器顺序
     - [ ] python算法实现
     - [X] vimwiki -- confluence wiki (目前不行)
     - [X] vim上下标#help™: digraph
+    - [X] vim粘帖 :set paste
 
 
 = Detail =

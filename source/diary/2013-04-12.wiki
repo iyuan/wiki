@@ -1,0 +1,12 @@
+= 移交 =
+
+- Pipeline
+    - pc/account list
+    - qa/dev
+    - slave 软件列表
+- Cbuild
+    - clean code(account,pwd)
+    - 凭据问题
+    - log.html
+    - java/maven
+    - api

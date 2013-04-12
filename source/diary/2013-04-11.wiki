@@ -1,0 +1,4 @@
+
+- [X] deploy centos vm
+
+用户组权限看:/etc/sudoers
