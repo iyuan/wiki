@@ -17,6 +17,7 @@
 - [o] interests
     - [ ] dns执行顺序/转向器顺序
     - [ ] python算法实现
+    - [X] vim confluence(open): get page by html,not wiki format
     - [X] vimwiki -- confluence wiki (目前不行)
     - [X] vim上下标#help™: digraph
     - [X] vim粘帖 :set paste

@@ -1,12 +1,25 @@
 = 移交 =
 
-- Pipeline
-    - pc/account list
-    - qa/dev
-    - slave 软件列表
-- Cbuild
-    - clean code(account,pwd)
-    - 凭据问题
-    - log.html
-    - java/maven
+- Pipeline(cy)
+    - code 
     - api
+- Cbuild
+    - api(曹元)
+        - pi
+    - code
+        - net(曹元)
+        - java
+        - sp
+- Jenkins(Nina)
+    - slave 软件列表
+    - 凭据问题
+    - 环境(qa/dev)
+        - PC LIST
+- clean code(account,pwd)
+- 技术基础
+    - git(cy)
+    - django(cy)
+    - tastypie(cy)
+    - pi(cy)
+    - ironpython
+    - .net lib
