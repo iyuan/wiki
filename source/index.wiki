@@ -14,9 +14,14 @@
         - [X] 页面平移
             - [X] stop action after get build_no
         - [X] 复用性
-- [o] interests
+- [ ] openstack
+    - [ ] doc
+- [O] interests
+    - [X] pdb
     - [ ] dns执行顺序/转向器顺序
+    - [ ] voice app/compare
     - [ ] python算法实现
+    - [ ] blog -- pythonic
     - [X] vim confluence(open): get page by html,not wiki format
     - [X] vimwiki -- confluence wiki (目前不行)
     - [X] vim上下标#help™: digraph
