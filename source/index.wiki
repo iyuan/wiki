@@ -5,7 +5,13 @@
 
 = TODO =
 
-- [ ] dns/ad 权限
+- [o] zabbix
+    - [ ] add wiki doc
+    - [X] add host
+    - [ ] account -> ad
+    - [X] add agent/new pc
+- [ ] ui/bootstrap
+    - [ ] doc
 - [X] ~~Pipeline~~
     - [X] 整理/统一api参数
     - [X] go 测试
@@ -14,12 +20,15 @@
         - [X] 页面平移
             - [X] stop action after get build_no
         - [X] 复用性
+- [ ] puppet
 - [ ] openstack
     - [ ] doc
+- [ ] dns/ad 权限
 - [O] interests
     - [X] pdb
     - [ ] dns执行顺序/转向器顺序
     - [ ] voice app/compare
+    - [ ] html generate
     - [ ] python算法实现
     - [ ] blog -- pythonic
     - [X] vim confluence(open): get page by html,not wiki format
