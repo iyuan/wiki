@@ -1,0 +1,4 @@
+- lpt
+    - 登录机器,修改域;进入ad,修改ou;gpupdate /force;gpresult /r
+
+

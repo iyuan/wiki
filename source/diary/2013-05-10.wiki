@@ -1,0 +1,42 @@
+-- unavailable modifier requested: 0 --
+apt-get install uwsgi-plugin-python
+
+href: http://projects.unbit.it/uwsgi/wiki/Example
+
+uwsgi.xml
+<uwsgi>
+    <virtualenv id="sslmanager">/opt/myenv/django1.3</virtualenv>
+    <pythonpath id="sslmanager">/home/iyuan/tmp/mygit/ctrip-ssl-cert-manager</pythonpath>
+    <chdir id="sslmanager">/home/iyuan/tmp/mygit/ctrip-ssl-cert-manager</chdir>
+    <module id="sslmanager">CtripSSLCertManager.wsgi:application</module>
+    <socket id="sslmanager">/tmp/sslmanager.sock</socket>
+
+    <master/>
+    <plugins>python</plugins>
+    <chmod-socket>666</chmod-socket>
+    <processes>4</processes>
+    <max-requests>5000</max-requests>
+    <daemonize>/var/log/uwsgi.log</daemonize>
+
+</uwsgi>
+
+
+nginx.conf
+
+server {
+        listen       80;
+        server_name  www.manager.com;
+        location /media/ {
+                      alias /tmp/;
+        }
+        location /static/ {
+                      #alias /home/iyuan/tmp/mygit/ctrip-ssl-cert-manager/SSLCertManager/static/;
+                      alias /var/www/static/;
+        }
+        location / {
+                uwsgi_pass unix:///tmp/sslmanager.sock;
+                include uwsgi_params;
+
+                #uwsgi_param UWSGI_PYHOME /Users/roberto/uwsgi/VENV1;
+        }
+    }

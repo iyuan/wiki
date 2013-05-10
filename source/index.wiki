@@ -5,13 +5,28 @@
 
 = TODO =
 
+- [O] ssl manager
+    - [X] ldap #cn1\,shdev\
+    - [X] db
+    - [X] domain / nginx
+    - [X] black script
+    - [X] view
+        - [X] download
+        - [X] filename
+        - [X] call
+        - [X] update
+        - [X] user-ldap
+        - [X] download-ajax
+    - [ ] doc
+- [ ] bare manager
 - [o] zabbix
+    - [ ] problem
     - [ ] add wiki doc
     - [X] add host
     - [ ] account -> ad
     - [X] add agent/new pc
-- [ ] ui/bootstrap
-    - [ ] doc
+- [X] ui/bootstrap
+    - [X] doc
 - [X] ~~Pipeline~~
     - [X] 整理/统一api参数
     - [X] go 测试
