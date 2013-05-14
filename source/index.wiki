@@ -1,4 +1,4 @@
-= Hi,Wiki! =
+[[=]] Hi,Wiki! =
 
 - [[Tutoral]]
 - [[diary/2013-04-12|移交]]
@@ -50,6 +50,10 @@
     - [X] vimwiki -- confluence wiki (目前不行)
     - [X] vim上下标#help™: digraph
     - [X] vim粘帖 :set paste
+    - [ ] vim-python
+        - [ ] jedi-vim补全,sinpMate 代码模版,flymaker/pyflakes 代码检查,fcitx-vim 可以完美解决输入法切换问题
+        - [ ] 请用vimim插件输入中文。。
+        - [ ] uncompyle2.py,lex/yacc工具,Pillow
 
 
 = Detail =
